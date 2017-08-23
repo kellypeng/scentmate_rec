@@ -17,6 +17,7 @@ def read_data(filename):
         lines = f.read().split(',')
     return lines
 
+
 def get_html(url):
     # headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) \
     #            AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
@@ -37,6 +38,7 @@ def get_html(url):
         print e # catastrophic error. bail.
         return None
     return response
+
 
 def get_brand_urls():
     '''
@@ -65,6 +67,7 @@ def get_brand_urls():
         if count % 10 == 0:
             print "Scraped {} urls...".format(count)
     return brands
+
 
 def scrape_first_page(brand_urls, range_start, range_end):
     '''
@@ -96,31 +99,6 @@ def scrape_first_page(brand_urls, range_start, range_end):
         if count % 10 == 0:
             print "Scraped {} page urls...".format(count)
     print "Done writing perfume urls to csv! Congrats! Save returned pages_list!"
-
-
-# def get_pages_list(brand_urls, range_start, range_end):
-#     '''Get page list of non-first pages of each brand
-#
-#     Input: brand_urls
-#     Output: A csv file containing all page urls
-#     '''
-#     count = 0
-#     pages_list = []
-#     for url in brand_urls[range_start:range_end]:
-#         response = get_html(url)
-#         if response == None:
-#             print "Get HTML break at #{} url.".format(count)
-#             break
-#         soup = BeautifulSoup(response.text, 'html.parser')
-#         pages_raw = soup.find_all('div', {'class': 'next_news'})
-#         with open('data/pages.csv','a') as resultFile:
-#             wr = csv.writer(resultFile)
-#             for page in pages_raw[0].find_all('a')[1:-2]:
-#                 wr.writerow([page['href']])
-#         time.sleep(10) # In case I got blocked
-#         count += 1
-#         if count % 10 == 0:
-#             print "Scraped {} page urls...".format(count)
 
 
 def scrape_other_pages(pages_list):
