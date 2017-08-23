@@ -31,7 +31,6 @@ def scrape_one_page(perfume_id, first_page=True):
     and return all other page urls.
     Then go through each non-first page url to return the user id on other pages.
     '''
-    count = 0
     attributes_list = []
     if first_page == True:
         comment_url = "/itmcomment.php?id={}".format(perfume_id)
@@ -51,19 +50,22 @@ def scrape_one_page(perfume_id, first_page=True):
             attributes['user_rating'] = None
         attributes_list.append(attributes)
     if len(attributes_list) > 0:
+        print "Perfume ID {} has reviews. Inserting rating to MongoDB".format(perfume_id)
         ratings.insert_many(attributes_list) # insert to mongodb
+    else:
+        print "Perfume ID {} has no reviews.".format(perfume_id)
     # store pages url to comment_pages.csv
     if first_page == True:
         pages = soup.find('div', {'class':'next_news'})
         if pages != None:
+            print "Writing page urls to csv file..."
             with open('data/comment_pages.csv','a') as resultFile:
                 wr = csv.writer(resultFile)
                 for page in pages.find_all('a')[1:-2]:
                     wr.writerow([page['href']])
+    elif first_page == False:
+        pass
     time.sleep(5) # In case I got blocked
-    count += 1
-    if count % 10 == 0:
-        print "Scraped {} perfume comment page urls...".format(count)
 
 
 if __name__ == '__main__':
@@ -75,12 +77,19 @@ if __name__ == '__main__':
     perfume_ids = get_perfume_id()
     n1, n2 = sys.argv[1], sys.argv[2]
     print "Scraping first page user ratings..."
-    for pid in perfume_ids[int(n1):int(n2)]: # altogether we have 22358 perfumes
-        print pid
+    count = 0
+    for pid in perfume_ids: #[int(n1):int(n2)]: # altogether we have 22358 perfumes
         scrape_one_page(pid, first_page=True)
+        count += 1
+        if count % 10 == 0:
+            print "Scraped {} first page urls...".format(count)
     print "Done inserting first page ratings to MongoDB!"
     print "Scraping non-first page comment urls..."
     page_urls = get_url_list('data/comment_pages.csv')
+    count2 = 0
     for page in page_urls:
         scrape_one_page(page, first_page=False)
-    print "Done inserting non-first page ratings to mongodb! Woohoooo!!!"
+        count2 += 1
+        if count2 % 10 == 0:
+            print "Scraped {} non-first page urls...".format(count)
+    print "Woohoooo!! Done inserting non-first page ratings to mongodb! "
