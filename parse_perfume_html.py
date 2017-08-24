@@ -16,18 +16,19 @@ def get_attributes(mongo_document):
     attributes = defaultdict(list)
     for link in soup.find('ul', {'class': 'item_info'}):
         for sublink in link.find_all('a', href=True):
-            if re.match("^(/pinpai/)", sublink.attrs['href']):
+            if re.match('(/pinpai/), sublink.attrs['href']):
                 attributes['brand'] = sublink.text
-            if re.match("^(/xiangdiao/)", sublink.attrs['href']):
+            if re.match('(/xiangdiao/)', sublink.attrs['href']):
                 attributes['theme'] = sublink.text
-            if re.match("^(/qiwei/)", sublink.attrs['href']):
+            if re.match('(/qiwei/)', sublink.attrs['href']):
                 attributes['note'].append(sublink.text)
-            if re.match("(attrib&word)", sublink.attrs['href']):
-                attributes['gender'] = sublink.text
             if re.match('(/tiaoxiangshi/)', sublink.attrs['href']):
                 attributes['perfumer'] = sublink.text
-            if re.match('(tag&word)', sublink.attrs['href']):
+            if re.search('(field=attrib)', sublink.attrs['href']): # re.match() will match from the beginning, re.search() looks for any location where this RE matches
+                attributes['gender'].append(sublink.text)
+            if re.search('(field=tag)', sublink.attrs['href']):
                 attributes['tags'].append(sublink.text)
+    attributes['perfume_id'] = re.findall(r'(/[0-9]*-)', url)[0][1:-1]
     attributes['item_name'] = soup.find('h1').text
     attributes['url'] = url
     return attributes
@@ -35,14 +36,15 @@ def get_attributes(mongo_document):
 
 
 if __name__ == '__main__':
+    print "Parse perfume html to get perfume features..."
     client = MongoClient("mongodb://fragrance:fragrance@35.164.86.3:27017/fragrance")
     fragrance = client.fragrance
     perfume_html = fragrance.perfume_html
-    perfumes = fragrance.perfumes
+    perfume_features = fragrance.perfume_features
     raw_data_iterator = perfume_html.find() # retrieve all from mongo
     print "Parsing data and store into MongoDB..."
     for raw in raw_data_iterator:
         attributes = get_attributes(raw)
-        perfumes.insert_one(attributes) # insert one by one into mongo
+        perfume_features.insert_one(attributes) # insert one by one into mongo
     print "Done! Everything is parsed into usable format!"
     client.close()
