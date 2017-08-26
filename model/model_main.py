@@ -5,17 +5,19 @@ import numpy as np
 from pymongo import MongoClient
 
 
-def prepare_item_mat():
+def prepare_item_mat(mongo_user_name, mongo_pwd):
     '''Takes in MongoDB perfume features table, returns item matrix
 
     Input:
+    ------
     MongoDB fragrance database, perfume_new collection
 
     Output:
+    ------
     Item matrix with rows as perfumes, columns as perfume features,
     including notes, tags, gender
     '''
-    client = MongoClient("mongodb://fragrance:fragrance@35.164.86.3:27017/fragrance")
+    client = MongoClient("mongodb://{}:{}@35.164.86.3:27017/fragrance".format(mongo_user_name, mongo_pwd))
     db = client.fragrance
     collection = db.perfume_features
     raw_df = pd.DataFrame(list(collection.find({}, {'_id': 0}))) # not including _id column
@@ -38,6 +40,7 @@ def prepare_item_mat():
 def prepare_util_mat(utility_matrix):
     '''
     Input:
+    ------
     Takes in ratings data read into pandas dataframe, then
     - Remove duplicates
     - Remove users who only have 1 rating
@@ -45,9 +48,9 @@ def prepare_util_mat(utility_matrix):
     - Parse user_id, drop original rated_user_id
 
     Output:
-    A pandas dataframe with 3 columns: perfume_id, user_id, and user_rating
+    ------
+    - A pandas dataframe with 3 columns: perfume_id, user_id, and user_rating
     '''
-
     utility_matrix = utility_matrix.drop_duplicates()
     utility_matrix.dropna(axis=0, inplace=True) # drop null values, wait, is it appropriate to drop?
     utility_matrix['user_id'] = utility_matrix['rated_user_id'].str.extract('(\d+)').astype(int) # extract user_id number
@@ -57,26 +60,29 @@ def prepare_util_mat(utility_matrix):
 
 def remove_user(utility_matrix):
     '''
-    Takes in utility matrix, removes users with only 1 rating
+    Takes in utility matrix, removes users with only 1 rating record
     Returns new utility matrix
     '''
     return utility_matrix[utility_matrix.groupby('user_id')['perfume_id'].transform(len) > 1]
 
 
-def rmse(theta, thetahat):
+def rmse(y_true, y_pred):
     ''' Compute Root-mean-squared-error '''
-    return np.sqrt(np.mean((theta - thetahat) ** 2))
+    return np.sqrt(np.mean((y_true - y_pred) ** 2))
 
 
 def scoring_metrics(y_true, y_pred):
     '''
     Input:
+    ------
     y_true : 1d array-like, or label indicator array / sparse matrix
              Ground truth (correct) target values.
     y_pred : 1d array-like, or label indicator array / sparse matrix
              Estimated targets as returned by a classifier.
-    ---
-    Output:  Print out recall, precision and F1 scores
+
+    Output:
+    ------
+    Print out recall, precision and F1 scores
     '''
     recall_score = recall_score(y_true, y_pred)
     precision_score = precision_score(y_true, y_pred)
@@ -87,9 +93,10 @@ def scoring_metrics(y_true, y_pred):
 
 
 if __name__ == '__main__':
-    # client = MongoClient("mongodb://fragrance:fragrance@35.164.86.3:27017/fragrance")
-    # db = client.fragrance
-    # collection = db.ratings_trial2
-    # utility_matrix = pd.DataFrame(list(collection.find({}, {'_id': 0}))) # not including _id column
-    # util = prepare_util_mat(utility_matrix)
-    item_matrix = prepare_item_mat()
+    mongo_user_name, mongo_pwd = sys.argv[1], sys.argv[2]
+    client = MongoClient("mongodb://{}:{}@35.164.86.3:27017/fragrance".format(mongo_user_name, mongo_pwd))
+    db = client.fragrance
+    collection = db.ratings_trial2
+    utility_matrix = pd.DataFrame(list(collection.find({}, {'_id': 0}))) # not including _id column
+    util = prepare_util_mat(utility_matrix)
+    item_matrix = prepare_item_mat(mongo_user_name, mongo_pwd)
