@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+<head>
+  <meta charset="utf-8"/>
+      <!-- Custom styles for this template -->
+      <!--   <link href="static/css/table_style.css" rel="stylesheet"> -->
+</head>
+
+<body>
+  {% if perfume_id %}
+  {% for element in entered%}
+  <h1>I see, you like {{ element['item_name'] }}. </h1>
+  <p> This is a {{ element['gender'] }}. </p>
+  <p> The key features of this fragrance is {{ element['note'] }} </p>
+  <p> When you are wearing this perfume, people will think of you as ...(need futther NLP work) </p>
+  <p> And because you like {{ element['item_name'] }}, we found some perfumes you may also like...</p>
+  {% endfor %}
+  {% else %}
+  <form>
+    <input type='text' name='perfume_id' placeholder='Perfume ID'/>
+    <input type='submit' value='Submit' />
+  </form>
+  {% endif %}
+
+  {% if perfume_id %}
+  <table align="center">
+    <thead>
+      <th align="center">Brand</th>
+      <th align="center">Perfume Name</th>
+      <th align="center">Gender</th>
+      <th align="center">Theme</th>
+      <th align="center">Note</th>
+      <th align="center">Tags</th>
+    </thead>
+    <tbody>
+      {% for element in recs%}
+        <tr>
+          <td>{{ element['brand'] }}</td>
+          <td>{{ element['item_name'] }}</td>
+          <td align="right">{{ element['gender']}}</td>
+          <td align="right">{{ element['theme']}}</td>
+          <td align="right">{{ element['note']}}</td>
+          <td align="right">{{ element['tags']}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+</body>
+</html>
