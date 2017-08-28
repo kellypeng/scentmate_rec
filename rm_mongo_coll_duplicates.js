@@ -27,4 +27,4 @@ db.perfume_features.aggregate([
 printjson(duplicates);
 
 // Remove all duplicates in one go
-db.collectionName.remove({_id:{$in:duplicates}})
+db.perfume_features.remove({_id:{$in:duplicates}})
