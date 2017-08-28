@@ -71,27 +71,6 @@ def rmse(y_true, y_pred):
     return np.sqrt(np.mean((y_true - y_pred) ** 2))
 
 
-def scoring_metrics(y_true, y_pred):
-    '''
-    Input:
-    ------
-    y_true : 1d array-like, or label indicator array / sparse matrix
-             Ground truth (correct) target values.
-    y_pred : 1d array-like, or label indicator array / sparse matrix
-             Estimated targets as returned by a classifier.
-
-    Output:
-    ------
-    Print out recall, precision and F1 scores
-    '''
-    recall_score = recall_score(y_true, y_pred)
-    precision_score = precision_score(y_true, y_pred)
-    f1_score = f1_score(y_true, y_pred)
-    print "recall score: ", recall_score
-    print "precision score: ", precision_score
-    print "f1_score", f1_score
-
-
 def write_pickle(filename, model):
     """
     Write the final model to a pickle file

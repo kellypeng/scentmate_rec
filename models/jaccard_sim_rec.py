@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
-import cPickle as pickle
+import pickle
+import model_main as mm
 from scipy.spatial.distance import pdist
 from sklearn.metrics import pairwise_distances
 
@@ -42,7 +43,9 @@ if __name__ == '__main__':
     # perfume_df = pd.read_csv('/Users/kellypeng/Documents/Tech/github/Galvanize/scent_cn_rec/data/item_matrix.csv')
     # perfume_df.set_index('perfume_id', inplace=True)
     # perfume_df = mm.prepare_item_mat() # this takes too long, thus I've stored to a local csv file
+    perfume_df = pd.read_csv('/Users/kellypeng/Documents/Tech/github/Galvanize/scent_cn_rec/data/item_matrix.csv')
+    perfume_df.set_index('perfume_id', inplace=True)
     jd = JaccardSimRec(n_rec=5)
-    # jd.fit(perfume_df)
-    with open('jaccard_model.pkl', 'w') as f:
-        pickle.dump(jd, f)
+    jd.fit(perfume_df)
+    # with open('jaccard_model.pkl', 'wb') as f:
+    #     pickle.dump(jd, f)

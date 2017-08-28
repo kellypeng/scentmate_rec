@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 sudo apt-get update
-sudo apt-get install tor
+# sudo apt-get install tor
 sudo echo "MaxCircuitDirtiness 10" >> /etc/tor/torrc
 
 echo "\t\tInstalling Anaconda"
