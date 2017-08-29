@@ -65,15 +65,16 @@ def manual_loocv(data, timing=False):
     loo = LeaveOneOut()
     rmse_list = []
     count = 0
-    for train, test in loo.split(data):
+    for train, test in loo.split(data): # train, test is an array of indices
+        train = data[0:test[0]].append(data[test[0]+1:])
         m = mf_model(train)
-        rmse_list.append(mm.rmse(test['user_rating'], m.predict(test)))
+        rmse_list.append(mm.rmse(data[test[0]]['user_rating'], m.predict(data[test[0]:test[0]+1])[0])) #Something weird with SFrame
         count += 1
         if count % 100 == 0:
             print "Leave one out cross validation is getting to {} folds..".format(count)
     if timing:
         print "Run time: %s seconds" % (time() - start_time)
-    return np.mean(rmse_list)
+    return rmse_list, np.mean(rmse_list)
 
 def kfold(data, num_folds=20):
     folds = gl.cross_validation.KFold(data, num_folds=num_folds)
@@ -93,16 +94,16 @@ if __name__ == '__main__':
     util = mm.prepare_util_mat(utility_matrix)
     util_mf = mm.remove_user(util) # remove users with only 1 rating
     sf = get_data(util_mf) # transform into SFrame
-    train, test = train_test_split(sf)
+    # train, test = train_test_split(sf)
     # Model 1, without regularization
-    m1 = gl.factorization_recommender.create(train,
-                                            linear_regularization=0,
-                                            user_id='user_id',
-                                            item_id='perfume_id',
-                                            target='user_rating',
-                                            num_factors=5, # Number of latent factors.
-                                            solver='als')
-    m1.evaluate_rmse(test, target='user_rating')
+    # m1 = gl.factorization_recommender.create(train,
+    #                                         linear_regularization=0,
+    #                                         user_id='user_id',
+    #                                         item_id='perfume_id',
+    #                                         target='user_rating',
+    #                                         num_factors=5, # Number of latent factors.
+    #                                         solver='als')
+    # m1.evaluate_rmse(test, target='user_rating')
 
     # # Model 2, with regularization
     # m2 = graphlab.factorization_recommender.create(sf,
@@ -112,5 +113,6 @@ if __name__ == '__main__':
     #                                             target='rating',
     #                                             num_factors=15 # Number of latent factors.
     #                                             solver='als')
-
     # rmse = leave_one_out_cv(sf, timing=True)
+
+    rmse_list, rmse_mean = manual_loocv(sf)

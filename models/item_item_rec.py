@@ -6,6 +6,7 @@ from scipy import sparse
 from time import time
 from pymongo import MongoClient
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.model_selection import train_test_split
 
 
 class ItemItemRecommender(object):
@@ -65,7 +66,7 @@ class ItemItemRecommender(object):
         cleaned_out = np.nan_to_num(out)
         return cleaned_out
 
-    def pred_all_users(self, report_run_time=False):
+    def pred_all_users(self, data, report_run_time=False):
         '''
         Repeated calls of pred_one_user, are combined into a single matrix.
         Return value is matrix of users (rows) items (columns) and predicted
@@ -76,7 +77,7 @@ class ItemItemRecommender(object):
         '''
         start_time = time()
         all_ratings = [
-            self.pred_one_user(user_id) for user_id in self.ratings_contents['user_id'].nunique()]
+            self.pred_one_user(user_id) for user_id in data['user_id'].unique()]
         if report_run_time:
             print("Execution time: %f seconds" % (time()-start_time))
         return np.array(all_ratings)
@@ -111,9 +112,13 @@ def get_ratings_data():
     ratings_as_mat = sparse.csr_matrix(ratings_pivot.values)
     return ratings_contents, ratings_as_mat
 
+def cross_val():
+    pass
+
 
 if __name__ == "__main__":
     ratings_contents, ratings_mat = get_ratings_data()
+    # train_ratings, test_ratings = train_test_split(ratings_contents, test_size=0.25, random_state=42) # train test split couldn't work
     my_rec_engine = ItemItemRecommender(neighborhood_size=75)
     my_rec_engine.fit(ratings_contents)
     user_1_preds = my_rec_engine.pred_one_user(user_id=33504, report_run_time=True)
