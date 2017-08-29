@@ -1,4 +1,3 @@
-# parse all perfume urls
 import re
 import sys
 from collections import defaultdict
@@ -41,34 +40,35 @@ def get_comments(mongo_document):
     Output: a dictionary of perfume url and perfume comments
     '''
     html = mongo_document['html']
-    # import pdb;
-    # pdb.set_trace()
     url = mongo_document['url']
     soup = BeautifulSoup(html, 'html.parser')
     attributes = defaultdict(list)
     if soup.find('div', {'class': 'hfshow'}) != None:
-        for discuss in soup.find('div', {'class': 'hfshow'}):
-            if discuss.text != None:
-                attributes['comments'].append(discuss.text)
-                attributes['perfume_id'] = re.findall(r'(/[0-9]*-)', url)[0][1:-1]
-                attributes['url'] = url
+        for discuss in soup.find_all('div', {'class': 'hfshow'}):
+            attributes['comments'].append(discuss.text)
+            attributes['perfume_id'] = re.findall(r'(/[0-9]*-)', url)[0][1:-1]
+            attributes['url'] = url
+        return attributes
 
 
 
 if __name__ == '__main__':
-    # print "Parse perfume html to get perfume features..."
     mongo_user_name, mongo_pwd = sys.argv[1], sys.argv[2]
     client = MongoClient("mongodb://{}:{}@35.164.86.3:27017/fragrance".format(mongo_user_name, mongo_pwd))
     fragrance = client.fragrance
     perfume_html = fragrance.perfume_html
-    perfume_comments = fragrance.perfume_comments
+    perfume_features = fragrance.perfume_features # get attributes
+    perfume_comments = fragrance.perfume_comments # get perfume comments
     raw_data_iterator = perfume_html.find() # retrieve all from mongo
     print "Parsing data and store into MongoDB..."
+    ### Parse perfume attributes
     # for raw in raw_data_iterator:
     #     attributes = get_attributes(raw)
     #     perfume_features.insert_one(attributes) # insert one by one into mongo
     # print "Done! Everything is parsed into usable format!"
     # client.close()
+
+    ### Parse perfume comments
     count = 0
     for raw in raw_data_iterator:
         attributes = get_comments(raw)
