@@ -56,8 +56,32 @@ def leave_one_out_cv(data, timing=False):
         if count % 100 == 0:
             print "Leave one out cross validation is getting to {} folds..".format(count)
     if timing:
-        print ("Run time: %s seconds" % (time() - start_time))
+        print "Run time: %s seconds" % (time() - start_time)
     return np.mean(rmse)
+
+
+def manual_loocv(data, timing=False):
+    '''Conduct LOOCV manually instead of calling GraphLab'''
+    loo = LeaveOneOut()
+    rmse_list = []
+    count = 0
+    for train, test in loo.split(data):
+        m = mf_model(train)
+        rmse_list.append(mm.rmse(test['user_rating'], m.predict(test)))
+        count += 1
+        if count % 100 == 0:
+            print "Leave one out cross validation is getting to {} folds..".format(count)
+    if timing:
+        print "Run time: %s seconds" % (time() - start_time)
+    return np.mean(rmse_list)
+
+def kfold(data, num_folds=20):
+    folds = gl.cross_validation.KFold(data, num_folds=num_folds)
+    for train, valid in folds:
+        m = mf_model(train)
+        print m.evaluate_rmse(valid, target='user_rating')['rmse_overall']
+
+
 
 
 if __name__ == '__main__':
@@ -69,15 +93,16 @@ if __name__ == '__main__':
     util = mm.prepare_util_mat(utility_matrix)
     util_mf = mm.remove_user(util) # remove users with only 1 rating
     sf = get_data(util_mf) # transform into SFrame
-    # train, test = train_test_split(sf)
+    train, test = train_test_split(sf)
     # Model 1, without regularization
-    # m1 = gl.factorization_recommender.create(train,
-    #                                         linear_regularization=0,
-    #                                         user_id='user_id',
-    #                                         item_id='perfume_id',
-    #                                         target='user_rating',
-    #                                         num_factors=5 # Number of latent factors.
-    #                                         solver='als')
+    m1 = gl.factorization_recommender.create(train,
+                                            linear_regularization=0,
+                                            user_id='user_id',
+                                            item_id='perfume_id',
+                                            target='user_rating',
+                                            num_factors=5, # Number of latent factors.
+                                            solver='als')
+    m1.evaluate_rmse(test, target='user_rating')
 
     # # Model 2, with regularization
     # m2 = graphlab.factorization_recommender.create(sf,
