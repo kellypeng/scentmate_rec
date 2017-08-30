@@ -1,5 +1,6 @@
 #coding: utf-8
 import re
+import sys
 import pandas as pd
 import numpy as np
 from pymongo import MongoClient
@@ -60,10 +61,10 @@ def prepare_util_mat(utility_matrix):
 
 def remove_user(utility_matrix):
     '''
-    Takes in utility matrix, removes users with only 1 rating record
+    Takes in utility matrix, removes users with only 1-2 rating record
     Returns new utility matrix
     '''
-    return utility_matrix[utility_matrix.groupby('user_id')['perfume_id'].transform(len) > 1]
+    return utility_matrix[utility_matrix.groupby('user_id')['perfume_id'].transform(len) > 2]
 
 
 def rmse(y_true, y_pred):
@@ -96,4 +97,7 @@ if __name__ == '__main__':
     collection = db.ratings_trial2
     utility_matrix = pd.DataFrame(list(collection.find({}, {'_id': 0}))) # not including _id column
     util = prepare_util_mat(utility_matrix)
-    item_matrix = prepare_item_mat(mongo_user_name, mongo_pwd)
+    util = remove_user(util) # remove users with less than 2 ratings!!
+    util.set_index('perfume_id', inplace=True)
+    # item_matrix = prepare_item_mat(mongo_user_name, mongo_pwd)
+    util.to_csv('/Users/kellypeng/Documents/Tech/github/Galvanize/scent_cn_rec/data/utility_matrix.csv', encoding='utf-8')
