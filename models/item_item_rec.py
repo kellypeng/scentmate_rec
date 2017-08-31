@@ -24,8 +24,8 @@ class ItemItemRecommender(object):
         self.ratings_pivot = pd.pivot_table(self.ratings_contents, values='user_rating', \
                              index='user_id', columns='perfume_id', fill_value=0)
         self.ratings_mat = sparse.csr_matrix(self.ratings_pivot.values) # sparse matrix, shape 3750 by 3116
-        self.n_users = ratings_mat.shape[0]
-        self.n_items = ratings_mat.shape[1]
+        self.n_users = self.ratings_mat.shape[0]
+        self.n_items = self.ratings_mat.shape[1]
         self.item_sim_mat = cosine_similarity(self.ratings_mat.T) # 3,116 by 3,116, pairwise similarity between perfumes
         self._set_neighborhoods()
 
@@ -100,6 +100,7 @@ class ItemItemRecommender(object):
         return rec_items
 
 
+####################################################
 def get_ratings_data():
     mongo_user_name, mongo_pwd = sys.argv[1], sys.argv[2]
     client = MongoClient("mongodb://{}:{}@35.164.86.3:27017/fragrance".format(mongo_user_name, mongo_pwd))
@@ -112,13 +113,12 @@ def get_ratings_data():
     ratings_as_mat = sparse.csr_matrix(ratings_pivot.values)
     return ratings_contents, ratings_as_mat
 
-def cross_val():
-    pass
 
 
 if __name__ == "__main__":
-    ratings_contents, ratings_mat = get_ratings_data()
+    # ratings_contents, ratings_mat = get_ratings_data()
     # train_ratings, test_ratings = train_test_split(ratings_contents, test_size=0.25, random_state=42) # train test split couldn't work
+    ratings_contents = pd.read_csv('../data/train_valid_test/utility_train.csv')
     my_rec_engine = ItemItemRecommender(neighborhood_size=75)
     my_rec_engine.fit(ratings_contents)
     user_1_preds = my_rec_engine.pred_one_user(user_id=33504, report_run_time=True)

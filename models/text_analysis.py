@@ -5,7 +5,8 @@ import numpy as np
 import pandas as pd
 import jieba
 import jieba.posseg as pseg
-from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer, TfidfTransformer
+from sklearn.feature_extraction.text import CountVectorizer
 from pymongo import MongoClient
 
 def get_corpus(df):
@@ -40,7 +41,7 @@ def get_tfidf_mat(seg_list, stop_words, max_features=1000):
 
 def find_top_features(k_features, tfidf_mat):
     '''
-    Find top k features in each perfume
+    Find top k features in each perfume from TFIDF matrix
 
     Parameters:
     -----------
@@ -55,6 +56,14 @@ def find_top_features(k_features, tfidf_mat):
         top_features[i] = feature_names[top_features_idx[i]]
     return top_features, top_features_idx
 
+def get_count_vectorizer(seg_list, stop_words, max_features=1000):
+    '''Convert a collection of text documents to a matrix of token counts'''
+    countvectorizer=CountVectorizer(stop_words=stop_words,
+                               analyzer='word',
+                               max_features=max_features)
+    countvec_docs = countvectorizer.fit_transform(seg_list) # return a sparse matrix
+    return countvectorizer, countvec_docs
+
 
 if __name__ == '__main__':
     client = MongoClient("mongodb://fragrance:fragrance@35.164.86.3:27017/fragrance")
@@ -62,12 +71,12 @@ if __name__ == '__main__':
     collection = db.perfume_comments
     raw_df = pd.DataFrame(list(collection.find({}, {'_id': 0}))) # not including _id column
     client.close()
-
+    #############################################################
     # Tokenize
     stpwdlst = get_cn_stopwords()
     corpus = get_corpus(raw_df)
     seg_list = split_to_words(corpus)
-
+    #############################################################
     # Fit to TFIDF
     tfidf_vectorizer, tfidf_docs = get_tfidf_mat(seg_list, stop_words=stpwdlst, max_features=1000)
     feature_names = np.array(tfidf_vectorizer.get_feature_names())
@@ -78,7 +87,7 @@ if __name__ == '__main__':
     print("Top features for each perfume: ")
     top_features, top_features_idx = find_top_features(15, tfidf_docs.toarray())
     print(top_features)
-
+    #############################################################
     # Get top features corresponding perfume names, save to csv
     df = pd.DataFrame(top_features)
     df = df.reset_index()
@@ -87,3 +96,11 @@ if __name__ == '__main__':
     output = pd.merge(df, s, how='left', left_on='index', right_on='index')
     output.drop('index', axis=1, inplace=True)
     output.to_csv('/Users/kellypeng/Documents/Tech/github/Galvanize/scent_cn_rec/data/perfume_key_features.csv', encoding='utf-8')
+    #############################################################
+    # Fit to CountVectorizer
+    # countvectorizer, countvec_docs = get_count_vectorizer(seg_list, stop_words=stpwdlst, max_features=1000)
+    # feature_names = np.array(countvectorizer.get_feature_names())
+    # print("Word List:")
+    # print(feature_names)
+    # print("Count Vector：")
+    # print(countvec_docs.toarray())

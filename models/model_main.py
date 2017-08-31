@@ -86,8 +86,6 @@ def write_pickle(filename, model):
     with open(filename, 'w') as f:
         pickle.dump(model, f)
 
-def train_test_split():
-    pass
 
 
 if __name__ == '__main__':
