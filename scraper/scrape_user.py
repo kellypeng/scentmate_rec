@@ -44,6 +44,7 @@ def scrape_one_page(perfume_id):
         attributes = {}
         attributes['perfume_id'] = perfume_id # add perfume_id for each rating record
         attributes['rated_user_id'] = d.find('a')['href'] # member_id
+        attributes['short_comment'] = d.find('div', {'class': 'hfshow1'}).text
         if d.find('span') != None:
             attributes['user_rating'] = int(d.find('span')['class'][1][2:]) # actual rating, 2nd element in a list
         else:
@@ -51,16 +52,16 @@ def scrape_one_page(perfume_id):
         attributes_list.append(attributes)
     if len(attributes_list) > 0:
         print "Perfume ID {} has reviews. Inserting rating to MongoDB".format(perfume_id)
-        ratings_trial2.insert_many(attributes_list) # insert to mongodb
+        short_ratings.insert_many(attributes_list) # insert to mongodb
     else:
         print "Perfume ID {} has no reviews.".format(perfume_id)
     # store pages url to comment_pages.csv
     pages = soup.find('div', {'class':'next_news'})
     if pages != None:
         print "Writing page urls to csv file..."
-        with open('data/comment_pages_trial_2.csv','a') as resultFile:
+        with open('data/comment_pages_short_ratings.csv','a') as resultFile:
             wr = csv.writer(resultFile)
-            for page in pages.find_all('a')[1:-2]:
+            for page in pages.find_all('a')[1:]:
                 wr.writerow([page['href']])
     time.sleep(5) # In case I got blocked
 
@@ -82,7 +83,7 @@ def scrape_all_pages(page_url):
         attributes_list.append(attributes)
     if len(attributes_list) > 0:
         print "Perfume ID {} has reviews. Inserting rating to MongoDB".format(perfume_id)
-        ratings_trial2.insert_many(attributes_list) # insert to mongodb
+        short_ratings.insert_many(attributes_list) # insert to mongodb
     else:
         print "Perfume ID {} has no reviews.".format(perfume_id)
     time.sleep(5) # In case I got blocked
@@ -92,7 +93,7 @@ if __name__ == '__main__':
     print "Scraping for rating data..."
     client = MongoClient("mongodb://fragrance:fragrance@35.164.86.3:27017/fragrance")
     fragrance = client.fragrance
-    ratings_trial2 = fragrance.ratings_trial2
+    short_ratings = fragrance.short_ratings
     print "Get all perfume id to a list..."
     # perfume_ids = get_perfume_id()
     perfume_ids = read_data('data/perfume_ids.csv') # 21,023 perfumes
@@ -107,7 +108,7 @@ if __name__ == '__main__':
     print "Done inserting first page ratings to MongoDB!"
     print "-"*40
     print "Scraping non-first page comment urls..."
-    page_urls = get_url_list('data/comment_pages_trial_2.csv')
+    page_urls = get_url_list('data/comment_pages_short_ratings.csv')
     count2 = 0
     for page in page_urls:
         scrape_all_pages(page)
