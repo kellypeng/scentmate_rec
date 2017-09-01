@@ -1,5 +1,4 @@
 # encoding=utf-8
-
 import io
 import numpy as np
 import pandas as pd
@@ -25,7 +24,7 @@ def split_to_words(corpus):
         seg_list.append(string)
     return seg_list
 
-def get_cn_stopwords():
+def get_perfume_stopwords():
     '''Get stopwords file customized for perfume reviews, return a list of words'''
     with io.open('chinese_stopwords.txt', 'r', encoding='utf8') as f:
         stpwdlst = f.read().split()
@@ -56,7 +55,7 @@ def find_top_features(k_features, tfidf_mat):
         top_features[i] = feature_names[top_features_idx[i]]
     return top_features, top_features_idx
 
-def get_count_vectorizer(seg_list, stop_words, max_features=1000):
+def get_countvec_mat(seg_list, stop_words, max_features=1000):
     '''Convert a collection of text documents to a matrix of token counts'''
     countvectorizer=CountVectorizer(stop_words=stop_words,
                                analyzer='word',
@@ -73,34 +72,44 @@ if __name__ == '__main__':
     client.close()
     #############################################################
     # Tokenize
-    stpwdlst = get_cn_stopwords()
+    stpwdlst = get_perfume_stopwords()
     corpus = get_corpus(raw_df)
     seg_list = split_to_words(corpus)
     #############################################################
     # Fit to TFIDF
-    tfidf_vectorizer, tfidf_docs = get_tfidf_mat(seg_list, stop_words=stpwdlst, max_features=1000)
-    feature_names = np.array(tfidf_vectorizer.get_feature_names())
+    # tfidf_vectorizer, tfidf_docs = get_tfidf_mat(seg_list, stop_words=stpwdlst, max_features=1000)
+    # feature_names = np.array(tfidf_vectorizer.get_feature_names())
     # print("Word List:")
     # print(feature_names)
     # print("TF IDF Vector：")
     # print(tfidf_docs.toarray())
-    print("Top features for each perfume: ")
-    top_features, top_features_idx = find_top_features(15, tfidf_docs.toarray())
-    print(top_features)
-    #############################################################
-    # Get top features corresponding perfume names, save to csv
-    df = pd.DataFrame(top_features)
-    df = df.reset_index()
-    s = raw_df['perfume_id']
-    s = s.reset_index()
-    output = pd.merge(df, s, how='left', left_on='index', right_on='index')
-    output.drop('index', axis=1, inplace=True)
-    output.to_csv('/Users/kellypeng/Documents/Tech/github/Galvanize/scent_cn_rec/data/perfume_key_features.csv', encoding='utf-8')
+    # print("Top features for each perfume: ")
+    # top_features, top_features_idx = find_top_features(15, tfidf_docs.toarray())
+    # print(top_features)
+    # #############################################################
+    # # Get top features corresponding perfume names, save to csv
+    # df = pd.DataFrame(top_features)
+    # df = df.reset_index()
+    # s = raw_df['perfume_id']
+    # s = s.reset_index()
+    # output = pd.merge(df, s, how='left', left_on='index', right_on='index')
+    # output.drop('index', axis=1, inplace=True)
+    # output.to_csv('/Users/kellypeng/Documents/Tech/github/Galvanize/scent_cn_rec/data/perfume_key_features.csv', encoding='utf-8')
     #############################################################
     # Fit to CountVectorizer
-    # countvectorizer, countvec_docs = get_count_vectorizer(seg_list, stop_words=stpwdlst, max_features=1000)
-    # feature_names = np.array(countvectorizer.get_feature_names())
-    # print("Word List:")
-    # print(feature_names)
-    # print("Count Vector：")
-    # print(countvec_docs.toarray())
+    countvectorizer, countvec_docs = get_countvec_mat(seg_list, stop_words=stpwdlst, max_features=1000)
+    feature_names = np.array(countvectorizer.get_feature_names())
+    print("Word List:")
+    print(feature_names)
+    print("Count Vector：")
+    print(countvec_docs.toarray())
+    print("Top features for each perfume by count vectorizer: ")
+    count_top_features, count_top_features_idx = find_top_features(15, countvec_docs.toarray())
+    print(count_top_features)
+    df_cnt = pd.DataFrame(count_top_features)
+    df_cnt = df.reset_index()
+    s = raw_df['perfume_id']
+    s = s.reset_index()
+    output = pd.merge(df_cnt, s, how='left', left_on='index', right_on='index')
+    output.drop('index', axis=1, inplace=True)
+    output.to_csv('/Users/kellypeng/Documents/Tech/github/Galvanize/scent_cn_rec/data/perfume_top_features_cntvec.csv', encoding='utf-8')
