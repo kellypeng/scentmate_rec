@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<title>ScentMate Perfume Recommender</title>
+<body>
+<h3> Top 5 perfumes matches you the best:  </h3>
+
+<table align="center">
+  <thead>
+    <th align="center">Brand</th>
+    <th align="center">Perfume Name</th>
+    <th align="center">Gender</th>
+    <th align="center">Theme</th>
+    <th align="center">Note</th>
+    <th align="center">Tags</th>
+  </thead>
+  <tbody>
+    {% for element in recs%}
+      <tr>
+        <td>{{ element['brand'] }}</td>
+        <td>{{ element['item_name'] }}</td>
+        <td align="right">{{ element['gender']}}</td>
+        <td align="right">{{ element['theme']}}</td>
+        <td align="right">{{ element['note']}}</td>
+        <td align="right">{{ element['tags']}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+</body>
+</html>

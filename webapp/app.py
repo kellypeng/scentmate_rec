@@ -3,6 +3,7 @@ from flask import Flask, render_template, request
 import requests
 import json
 import pandas as pd
+import numpy as np
 import _pickle as pickle
 from pymongo import MongoClient
 from jaccard_sim_rec import JaccardSimRec
@@ -34,14 +35,20 @@ def recs(perfume_id=None):
         return render_template('table.html', perfume_id=perfume_id, fixed='some string')
 
 
+@app.route('/home')
+def home():
+	return render_template('home.html')
+
+
 @app.route('/getmatch',methods=['POST','GET'])
-def get_delay():
+def get_match():
     if request.method=='POST':
         result=request.form
 		#Prepare the feature vector for prediction
-        pkl_file = open('../models/pickled_models/perfume_df.pkl', 'rb')
-        index_dict = pickle.load(pkl_file)
+        pkl_index = open('../models/pickled_models/perfume_df.pkl', 'rb')
+        index_dict = pickle.load(pkl_index)
         new_vector = np.zeros(len(index_dict))
+        new_vector[index_dict['gender_'+str('中性香')]] = 1
 
         try:
             new_vector[index_dict['gender_'+str(result['gender'])]] = 1
@@ -59,23 +66,12 @@ def get_delay():
             new_vector[index_dict['theme_'+str(result['theme'])]] = 1
         except:
             pass
-        try:
-            new_vector[index_dict['DEP_HOUR_'+str(result['dep_hour'])]] = 1
-        except:
-            pass
 
-        pkl_file = open('../models/pickled_models/jaccard_model.pkl', 'rb')
-        jaccard_model = pickle.load(pkl_file)
-        prediction = jaccard_model.predict_one(new_vector)
+        prediction = model.predict_by_vector(new_vector)
+        recs = list(collection.find({'perfume_id': {'$in': prediction}},  {'item_name':1,
+            'brand':1, 'gender':1, 'note':1, 'tags':1, 'theme':1, '_id':0}))
 
-        return render_template('result.html',prediction=prediction)
-
-@app.route('/try',methods=['POST','GET'])
-def tryit():
-    if request.method == 'POST':
-        as_dict = request.form.getlist('myform')
-        return render_template('try_getlist.html',as_dict=as_dict)
-
+        return render_template('result.html', prediction=prediction, recs=recs)
 
 
 if __name__ == "__main__":

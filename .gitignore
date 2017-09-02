@@ -1,0 +1,11 @@
+*.pyc
+.ipynb_checkpoints
+*.bak
+*.swp
+.DS_Store
+*.dat
+*.pkl
+data/
+dump/
+webapp_test/
+mongo_backup.py

@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import pickle
-import model_main as mm
+# import model_main as mm
 from scipy.spatial.distance import pdist
 from sklearn.metrics import pairwise_distances
 
@@ -52,8 +52,7 @@ class JaccardSimRec(object):
         i = 0
         while i <= self.n_rec:
             rec = str(self.perfume_df.index[rec_index[i]])
-            if rec != perfume_id:
-                recommendations.append(rec)
+            recommendations.append(rec)
             i += 1
         return recommendations
 
@@ -63,9 +62,9 @@ if __name__ == '__main__':
     # perfume_df = pd.read_csv('../data/item_matrix.csv')
     # perfume_df.set_index('perfume_id', inplace=True)
     # perfume_df = mm.prepare_item_mat() # this takes too long, thus I've stored to a local csv file
-    perfume_df = pd.read_csv('../data/item_matrix.csv')
-    perfume_df.set_index('perfume_id', inplace=True)
+    # perfume_df = pd.read_csv('../data/item_matrix.csv')
+    # perfume_df.set_index('perfume_id', inplace=True)
     jd = JaccardSimRec(n_rec=5)
-    jd.fit(perfume_df)
-    # with open('jaccard_model.pkl', 'wb') as f:
-    #     pickle.dump(jd, f)
+    # jd.fit(perfume_df)
+    with open('jaccard_model.pkl', 'wb') as f:
+        pickle.dump(jd, f)

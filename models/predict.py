@@ -1,5 +1,6 @@
+# run on python3
 import pandas as pd
-import cPickle as pickle
+import _pickle as pickle
 from time import time
 from jaccard_sim_rec import JaccardSimRec
 
@@ -31,5 +32,5 @@ if __name__ == "__main__":
     # Step 2: Create a Dataframe with only the dummy variables
     index_dict = dict(zip(perfume_df.columns,range(perfume_df.shape[1])))
 
-    with open('perfume_df', 'wb') as fid:
+    with open('pickled_models/perfume_df.pkl', 'wb') as fid:
         pickle.dump(index_dict, fid)
