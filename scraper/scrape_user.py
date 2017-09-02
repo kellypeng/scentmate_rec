@@ -38,55 +38,63 @@ def scrape_one_page(perfume_id):
     attributes_list = []
     comment_url = "/itmcomment.php?id={}".format(perfume_id)
     response = get_html(comment_url)
-    soup = BeautifulSoup(response.text, 'html.parser')
-    div = soup.find_all('div', {'class':'comment2'})
-    for d in div:
-        attributes = {}
-        attributes['perfume_id'] = perfume_id # add perfume_id for each rating record
-        attributes['rated_user_id'] = d.find('a')['href'] # member_id
-        attributes['short_comment'] = d.find('div', {'class': 'hfshow1'}).text
-        if d.find('span') != None:
-            attributes['user_rating'] = int(d.find('span')['class'][1][2:]) # actual rating, 2nd element in a list
+    if response != None:
+        soup = BeautifulSoup(response.text, 'html.parser')
+        div = soup.find_all('div', {'class':'comment2'})
+        for d in div:
+            attributes = {}
+            attributes['perfume_id'] = perfume_id # add perfume_id for each rating record
+            attributes['rated_user_id'] = d.find('a')['href'] # member_id
+            attributes['short_comment'] = d.find('div', {'class': 'hfshow1'}).text
+            if d.find('span') != None:
+                attributes['user_rating'] = int(d.find('span')['class'][1][2:]) # actual rating, 2nd element in a list
+            else:
+                attributes['user_rating'] = None
+            attributes_list.append(attributes)
+        if len(attributes_list) > 0:
+            print "Perfume ID {} has reviews. Inserting rating to MongoDB".format(perfume_id)
+            short_ratings.insert_many(attributes_list) # insert to mongodb
         else:
-            attributes['user_rating'] = None
-        attributes_list.append(attributes)
-    if len(attributes_list) > 0:
-        print "Perfume ID {} has reviews. Inserting rating to MongoDB".format(perfume_id)
-        short_ratings.insert_many(attributes_list) # insert to mongodb
+            print "Perfume ID {} has no reviews.".format(perfume_id)
+        # store pages url to comment_pages.csv
+        pages = soup.find('div', {'class':'next_news'})
+        if pages != None:
+            print "Writing page urls to csv file..."
+            with open('data/comment_pages_ratings_0901.csv','a') as resultFile:
+                wr = csv.writer(resultFile)
+                for page in pages.find_all('a')[1:]:
+                    wr.writerow([page['href']])
+        time.sleep(10) # In case I got blocked
     else:
-        print "Perfume ID {} has no reviews.".format(perfume_id)
-    # store pages url to comment_pages.csv
-    pages = soup.find('div', {'class':'next_news'})
-    if pages != None:
-        print "Writing page urls to csv file..."
-        with open('data/comment_pages_short_ratings.csv','a') as resultFile:
-            wr = csv.writer(resultFile)
-            for page in pages.find_all('a')[1:]:
-                wr.writerow([page['href']])
-    time.sleep(5) # In case I got blocked
+        print "This url does not exist." # Handle Attribute Error: Nonetype does not have "text"
+        pass
 
 
 def scrape_all_pages(page_url):
     attributes_list = []
     perfume_id = re.findall(r'(=[0-9]*&)', page_url)[0][1:-1] # parse url to get id
     response = get_html(page_url)
-    soup = BeautifulSoup(response.text, 'html.parser')
-    div = soup.find_all('div', {'class':'comment2'})
-    for d in div:
-        attributes = {}
-        attributes['perfume_id'] = perfume_id # add perfume_id for each rating record
-        attributes['rated_user_id'] = d.find('a')['href'] # member_id
-        if d.find('span') != None:
-            attributes['user_rating'] = int(d.find('span')['class'][1][2:]) # actual rating, 2nd element in a list
+    if response != None:
+        soup = BeautifulSoup(response.text, 'html.parser')
+        div = soup.find_all('div', {'class':'comment2'})
+        for d in div:
+            attributes = {}
+            attributes['perfume_id'] = perfume_id # add perfume_id for each rating record
+            attributes['rated_user_id'] = d.find('a')['href'] # member_id
+            if d.find('span') != None:
+                attributes['user_rating'] = int(d.find('span')['class'][1][2:]) # actual rating, 2nd element in a list
+            else:
+                attributes['user_rating'] = None
+            attributes_list.append(attributes)
+        if len(attributes_list) > 0:
+            print "Perfume ID {} has reviews. Inserting rating to MongoDB".format(perfume_id)
+            short_ratings.insert_many(attributes_list) # insert to mongodb
         else:
-            attributes['user_rating'] = None
-        attributes_list.append(attributes)
-    if len(attributes_list) > 0:
-        print "Perfume ID {} has reviews. Inserting rating to MongoDB".format(perfume_id)
-        short_ratings.insert_many(attributes_list) # insert to mongodb
+            print "Perfume ID {} has no reviews.".format(perfume_id)
+        time.sleep(10) # In case I got blocked
     else:
-        print "Perfume ID {} has no reviews.".format(perfume_id)
-    time.sleep(5) # In case I got blocked
+        print "URL content cannot be fetched"
+        pass
 
 
 if __name__ == '__main__':
@@ -96,23 +104,22 @@ if __name__ == '__main__':
     short_ratings = fragrance.short_ratings
     print "Get all perfume id to a list..."
     # perfume_ids = get_perfume_id()
-    perfume_ids = read_data('data/perfume_ids.csv') # 21,023 perfumes
+    perfume_ids = read_data('data/rated_perfume_id.csv') # 21,023 perfumes
     n1, n2 = sys.argv[1], sys.argv[2]
     print "Scraping first page user ratings..."
     count = 0
     for pid in perfume_ids[int(n1):int(n2)]: # altogether we have 22,358 perfumes
         scrape_one_page(pid)
+        print "Scraped {} first page urls...".format(count)
         count += 1
-        if count % 10 == 0:
-            print "Scraped {} first page urls...".format(count)
+
     print "Done inserting first page ratings to MongoDB!"
-    print "-"*40
-    print "Scraping non-first page comment urls..."
-    page_urls = get_url_list('data/comment_pages_short_ratings.csv')
-    count2 = 0
-    for page in page_urls:
-        scrape_all_pages(page)
-        count2 += 1
-        if count2 % 10 == 0:
-            print "Scraped {} non-first page urls...".format(count2)
-    print "Woohoooo!! Done inserting non-first page ratings to mongodb! "
+    # print "-"*40
+    # print "Scraping non-first page comment urls..."
+    # page_urls = get_url_list('data/comment_pages_ratings_0901.csv')
+    # count2 = 0
+    # for page in page_urls:
+    #     scrape_all_pages(page)
+    #     print "Scraped {} non-first page urls...".format(count2)
+    #     count2 += 1
+    # print "Woohoooo!! Done inserting non-first page ratings to mongodb! "
