@@ -38,12 +38,32 @@ class JaccardSimRec(object):
         return recommendations
 
 
+    def predict_by_vector(self, perfume_vector):
+        '''
+        Takes in user selection, form as perfume feature vector as arg.
+        Return the most similar perfumes of this perfume.
+
+        Given two vectors, u and v, the Jaccard distance is the proportion
+        of those elements u[i] and v[i] that disagree.
+        '''
+        jaccard_distances = pairwise_distances(perfume_vector, self.perfume_matrix, metric='jaccard')
+        rec_index = np.argsort(jaccard_distances)[0]
+        recommendations = []
+        i = 0
+        while i <= self.n_rec:
+            rec = str(self.perfume_df.index[rec_index[i]])
+            if rec != perfume_id:
+                recommendations.append(rec)
+            i += 1
+        return recommendations
+
+
 
 if __name__ == '__main__':
-    # perfume_df = pd.read_csv('/Users/kellypeng/Documents/Tech/github/Galvanize/scent_cn_rec/data/item_matrix.csv')
+    # perfume_df = pd.read_csv('../data/item_matrix.csv')
     # perfume_df.set_index('perfume_id', inplace=True)
     # perfume_df = mm.prepare_item_mat() # this takes too long, thus I've stored to a local csv file
-    perfume_df = pd.read_csv('/Users/kellypeng/Documents/Tech/github/Galvanize/scent_cn_rec/data/item_matrix.csv')
+    perfume_df = pd.read_csv('../data/item_matrix.csv')
     perfume_df.set_index('perfume_id', inplace=True)
     jd = JaccardSimRec(n_rec=5)
     jd.fit(perfume_df)
