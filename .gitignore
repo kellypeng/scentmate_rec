@@ -7,5 +7,7 @@
 *.pkl
 data/
 dump/
+pickled_models/
 webapp_test/
+__pycache__/
 mongo_backup.py
