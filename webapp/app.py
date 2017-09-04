@@ -23,6 +23,8 @@ app.config.update(
 def homepage():
     return render_template('index.html')
 
+
+
 # predict
 @app.route("/predict")
 def recs(perfume_id=None):
@@ -33,7 +35,18 @@ def recs(perfume_id=None):
     if perfume_id != None:
         recommendations = model.predict_one(str(perfume_id)) # recs is a list of perfume_id in string format
         recs = list(collection.find({'perfume_id': {'$in': recommendations}},  {'item_name':1,
-            'brand':1, 'gender':1, 'note':1, 'tags':1, 'theme':1, '_id':0}))
+            'brand':1, 'gender':1, 'note':1, 'theme':1, '_id':0}))
+        # Translation from CN to English
+        brand_dict = dt.brand_dict()
+        note_dict = dt.note_dict()
+        gender_dict = dt.gender_dict()
+        for rec in recs:
+            try:
+                rec['brand_en'] = brand_dict[rec['brand']]
+                rec['gender_en'] = gender_dict[rec['gender']]
+                rec['note_en'] = [note_dict[note] for note in rec['note']]
+            except:
+                pass
         return render_template('table.html', perfume_id=perfume_id, entered=entered, recs=recs, fixed='some string')
     else:
         return render_template('table.html', perfume_id=perfume_id, fixed='some string')
@@ -79,21 +92,18 @@ def get_match():
                     pass
         prediction = model.predict_by_vector(new_vector)
         recs = list(collection.find({'perfume_id': {'$in': prediction}},  {'item_name':1,
-            'brand':1, 'gender':1, 'note':1, 'tags':1, 'theme':1, '_id':0}))
+            'brand':1, 'gender':1, 'note':1, 'theme':1, '_id':0}))
         # Translation from CN to English
         brand_dict = dt.brand_dict()
         note_dict = dt.note_dict()
-        tag_dict = dt.tag_dict()
         gender_dict = dt.gender_dict()
         for rec in recs:
             try:
                 rec['brand_en'] = brand_dict[rec['brand']]
                 rec['gender_en'] = gender_dict[rec['gender']]
                 rec['note_en'] = [note_dict[note] for note in rec['note']]
-                rec['tag_en'] = [note_dict[tag] for tag in rec['tags']]
             except:
                 pass
-        print(recs)
         return render_template('result.html', features=features, prediction=prediction, recs=recs)
 
 
@@ -110,9 +120,3 @@ if __name__ == "__main__":
     db = client.fragrance
     collection = db.perfume_features
     app.run(port=5000, debug=True)
-
-    #### CN to EN
-    brand_dict = dt.brand_dict()
-    note_dict = dt.note_dict()
-    tag_dict = dt.ag_dict()
-    gender_dict = dt.gender_dict()

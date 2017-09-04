@@ -22,6 +22,31 @@
 </head>
 
 <body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="#">ScentMate</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/signin">Sign In</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">About ScentMate</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Contact</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Recommendation -->
   <p>I see, you are looking for a {{ features['gender'][0] }} product. </p>
   <p> The notes you like are:  {{ features['note']|join(',') }}</p>
   <p> The themes you like are:  {{ features['theme']|join(',') }}</p>
@@ -37,7 +62,6 @@
       <th align="center">Gender</th>
       <th align="center">Theme</th>
       <th align="center">Notes</th>
-      <th align="center">Tags</th>
     </tr>
   </thead>
   <tbody>
@@ -45,10 +69,9 @@
       <tr>
         <td>{{ element['brand_en'] }}</td>
         <td>{{ element['item_name'] }}</td>
-        <td align="right">{{ element['gender_en']}}</td>
-        <td align="right">{{ element['theme']}}</td>
-        <td align="right">{{ element['note_en']|join(',')}}</td>
-        <td align="right">{{ element['tag_en']|join(',')}}</td>
+        <td>{{ element['gender_en']}}</td>
+        <td>{{ element['theme']}}</td>
+        <td>{{ element['note_en']|join(',')}}</td>
       </tr>
     {% endfor %}
   </tbody>
