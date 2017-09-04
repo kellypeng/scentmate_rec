@@ -1,8 +1,8 @@
 {
-  "title": "Agency",
-  "name": "startbootstrap-agency",
+  "title": "Landing Page",
+  "name": "startbootstrap-landing-page",
   "version": "4.0.0-beta",
-  "description": "Agency is a one page HTML theme for Bootstrap.",
+  "description": "An HTML landing page template built with Bootstrap",
   "keywords": [
     "css",
     "sass",
@@ -11,9 +11,9 @@
     "theme",
     "template"
   ],
-  "homepage": "https://startbootstrap.com/template-overviews/agency",
+  "homepage": "https://startbootstrap.com/template-overviews/landing-page",
   "bugs": {
-    "url": "https://github.com/BlackrockDigital/startbootstrap-agency/issues",
+    "url": "https://github.com/BlackrockDigital/startbootstrap-landing-page/issues",
     "email": "feedback@startbootstrap.com"
   },
   "license": "MIT",
@@ -23,22 +23,16 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/BlackrockDigital/startbootstrap-agency.git"
+    "url": "https://github.com/BlackrockDigital/startbootstrap-landing-page.git"
   },
   "dependencies": {
     "bootstrap": "^4.0.0-beta",
     "font-awesome": "4.7.0",
     "jquery": "^3.2.1",
-    "jquery.easing": "^1.4.1",
     "popper.js": "^1.11.1"
   },
   "devDependencies": {
     "browser-sync": "2.18.13",
-    "gulp": "^3.9.1",
-    "gulp-clean-css": "3.7.0",
-    "gulp-header": "1.8.9",
-    "gulp-rename": "^1.2.2",
-    "gulp-sass": "^3.1.0",
-    "gulp-uglify": "3.0.0"
+    "gulp": "^3.9.1"
   }
 }

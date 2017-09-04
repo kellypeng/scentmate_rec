@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang=zh-CN>
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>ScentMate Perfume Recommender</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Cormorant:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i" rel="stylesheet">
+    <!-- Custom styles for this template -->
+    <link href="static/css/landing-page.css" rel="stylesheet">
+
+</head>
+
+<title>ScentMate Perfume Recommender</title>
+
+<body>
+  <h1>Tell me something about you... </h1>
+
+<form action = "/getmatch" method="POST">
+  <p>
+    <label>Your gender</label>
+    <label><input type="radio" name="gender" value="女香">Female</label>
+    <label><input type="radio" name="gender" value="男香">Male</label>
+  </p>
+  <p>
+    <dl class="dropdown">
+        <dt>
+        <a href="#">
+          <span class="hida">What note do you like?</span>
+          <p class="multiSel"></p>
+        </a>
+        </dt>
+        <dd>
+            <div class="mutliSelect">
+                <ul>
+                    <li>
+                        <input type="checkbox" id='麝香' name='note' value="麝香" />麝香 Musk</li>
+                    <li>
+                        <input type="checkbox" id='茉莉' name='note' value="茉莉" />茉莉 Jasmine</li>
+                    <li>
+                        <input type="checkbox" id='玫瑰' name='note' value="玫瑰" />玫瑰 Rose</li>
+                    <li>
+                        <input type="checkbox" id='香柠檬' name='note' value="香柠檬" />香柠檬 Bergamot</li>
+                    <li>
+                        <input type="checkbox" id='柠檬' name='note' value="柠檬" />柠檬 Lemon</li>
+                    <li>
+                        <input type="checkbox" id='橙花' name='note' value="橙花" />橙花 Neroli</li>
+                    <li>
+                        <input type="checkbox" id='薰衣草' name='note' value="薰衣草" />薰衣草 Lavender</li>
+
+                </ul>
+            </div>
+        </dd>
+        <button>Filter</button>
+    </dl>
+  </p>
+
+  <p>
+    <dl class="dropdown">
+        <dt>
+        <a href="#">
+          <span class="hida">What theme do you like?</span>
+          <p class="multiSel"></p>
+        </a>
+        </dt>
+        <dd>
+            <div class="mutliSelect">
+                <ul>
+                    <li>
+                        <input type="checkbox" id='花香调' name='theme' value="花香调" />花香调</li>
+                    <li>
+                        <input type="checkbox" id='花香果香调' name='theme' value="花香果香调" />花香果香调</li>
+                    <li>
+                        <input type="checkbox" id='东方花香调' name='theme' value="东方花香调" />东方花香调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="木质花香调" />木质花香调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="木质馥奇香调" />木质馥奇香调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="馥奇香调" />馥奇香调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="木质东方调" />木质东方调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="东方调" />东方调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="柑橘馥奇香调" />柑橘馥奇香调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="东方美食调" />东方美食调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="辛辣木质调" />辛辣木质调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="花香甘苔调" />花香甘苔调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="花果香美食调" />花果香美食调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="绿叶花香调" />绿叶花香调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="辛辣东方调" />辛辣东方调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="辛辣馥奇香调" />辛辣馥奇香调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="柑橘调" />柑橘调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="木质调" />木质调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="皮革调" />皮革调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="果香馥奇香调" />果香馥奇香调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="东方馥奇香调" />东方馥奇香调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="水生花香调" />水生花香调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="水生馥奇香调" />水生馥奇香调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="甘苔调" />甘苔调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="绿叶馥奇香调" />绿叶馥奇香调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="醛香花香调" />醛香花香调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="木质甘苔调" />木质甘苔调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="东方馥奇香调" />果香甘苔调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="水生花香调" />水生木质调</li>
+                    <li>
+                        <input type="checkbox" id='theme' name='theme' value="水生馥奇香调" />柑橘美食调</li>
+                </ul>
+            </div>
+        </dd>
+    </dl>
+  </p>
+
+
+	<p> <input type ="submit" value="Check Our Suggestions" /> </p>
+</form>
+
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+  <script src="static/js/my_style.js"></script>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <ul class="list-inline">
+        <li class="list-inline-item">
+          <a href="#">Home</a>
+        </li>
+        <li class="footer-menu-divider list-inline-item">&sdot;</li>
+        <li class="list-inline-item">
+          <a href="#about">About</a>
+        </li>
+        <li class="footer-menu-divider list-inline-item">&sdot;</li>
+        <li class="list-inline-item">
+          <a href="#contact">Contact</a>
+        </li>
+      </ul>
+      <p class="copyright text-muted small">Copyright &copy; ScentMate 2017. All Rights Reserved</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="static/vendor/jquery/jquery.min.js"></script>
+  <script src="static/vendor/popper/popper.min.js"></script>
+  <script src="static/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+</body>
+</html>

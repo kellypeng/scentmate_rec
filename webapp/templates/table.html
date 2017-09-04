@@ -1,9 +1,24 @@
 <!DOCTYPE html>
 <html lang=zh-CN>
 <head>
-  <meta charset="utf-8"/>
-      <!-- Custom styles for this template -->
-      <!--   <link href="static/css/table_style.css" rel="stylesheet"> -->
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>ScentMate Perfume Recommender</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Cormorant:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="static/css/landing-page.css" rel="stylesheet">
+
 </head>
 
 <body>
@@ -23,7 +38,7 @@
   {% endif %}
 
   {% if perfume_id %}
-  <table align="center">
+  <table class="table table-striped" align='center'>
     <thead>
       <th align="center">Brand</th>
       <th align="center">Perfume Name</th>
@@ -46,5 +61,89 @@
     </tbody>
   </table>
   {% endif %}
+
+<section class="content-section-a">
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-lg-5 ml-auto">
+        <div class="clearfix"></div>
+        <h2 class="section-heading"></h2>
+      </div>
+      <div class="col-lg-5 mr-auto ">
+        <img class="img-fluid" src="img/phones.png" alt="">
+      </div>
+    </div>
+
+  </div>
+  <!-- /.container -->
+
+</section>
+<!-- /.content-section-a -->
+
+<aside class="banner">
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-lg-6 my-auto">
+        <h2>Connect to Kelly Peng:</h2>
+      </div>
+      <div class="col-lg-6 my-auto">
+        <ul class="list-inline banner-social-buttons">
+        </li>
+        <li class="list-inline-item">
+          <a href="https://www.linkedin.com/in/pengyuwei/" class="btn btn-secondary btn-lg">
+            <i class="fa fa-linkedin fa-fw"></i>
+            <span class="network-name">Linkedin</span>
+          </a>
+        </li>
+          <li class="list-inline-item">
+            <a href="https://github.com/kellypeng" class="btn btn-secondary btn-lg">
+              <i class="fa fa-github fa-fw"></i>
+              <span class="network-name">Github</span>
+            </a>
+          <li class="list-inline-item">
+            <a href="https://twitter.com/KellyYuweiPeng" class="btn btn-secondary btn-lg">
+              <i class="fa fa-twitter fa-fw"></i>
+              <span class="network-name">Twitter</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+  <!-- /.container -->
+
+</aside>
+<!-- /.banner -->
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <ul class="list-inline">
+      <li class="list-inline-item">
+        <a href="#">Home</a>
+      </li>
+      <li class="footer-menu-divider list-inline-item">&sdot;</li>
+      <li class="list-inline-item">
+        <a href="#about">About</a>
+      </li>
+      <li class="footer-menu-divider list-inline-item">&sdot;</li>
+      <li class="list-inline-item">
+        <a href="#contact">Contact</a>
+      </li>
+    </ul>
+    <p class="copyright text-muted small">Copyright &copy; ScentMate 2017. All Rights Reserved</p>
+  </div>
+</footer>
+
+<!-- Bootstrap core JavaScript -->
+<script src="static/vendor/jquery/jquery.min.js"></script>
+<script src="static/vendor/popper/popper.min.js"></script>
+<script src="static/vendor/bootstrap/js/bootstrap.min.js"></script>
+
 </body>
 </html>
