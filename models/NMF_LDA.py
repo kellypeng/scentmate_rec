@@ -1,3 +1,4 @@
+# Need to run in python 3 environment
 import io
 import numpy as np
 import pandas as pd
@@ -11,8 +12,8 @@ from sklearn.decomposition import NMF, LatentDirichletAllocation
 def get_corpus(df):
     '''Build corpus from dataframe'''
     corpus = []
-    for doc in df['comments']:
-        corpus.append(doc[0])
+    for doc in df['all_comments']:
+        corpus.append(doc)
     return corpus
 
 def split_to_words(corpus):
@@ -26,7 +27,7 @@ def split_to_words(corpus):
 
 def get_perfume_stopwords():
     '''Get stopwords file customized for perfume reviews, return a list of words'''
-    with io.open('chinese_stopwords.txt', 'r', encoding='utf8') as f:
+    with io.open('perfume_cn_stopwords.txt', 'r', encoding='utf8') as f:
         stpwdlst = f.read().split()
     return stpwdlst
 
@@ -57,23 +58,27 @@ def hand_label_topics(H, vocabulary):
     hand_labels = []
     for i, row in enumerate(H):
         top_five = np.argsort(row)[::-1][:20]
-        print 'topic', i
-        print '-->', ' '.join(vocabulary[top_five])
+        print('topic', i)
+        print('-->', ' '.join(vocabulary[top_five]))
         label = raw_input('please label this topic: ')
         hand_labels.append(label)
         print
     return hand_labels
 
-def main():
-    client = MongoClient("mongodb://fragrance:fragrance@35.164.86.3:27017/fragrance")
-    db = client.fragrance
-    collection = db.perfume_comments
-    raw_df = pd.DataFrame(list(collection.find({}, {'_id': 0}))) # not including _id column
-    client.close()
+
+
+
+if __name__ == '__main__':
+    # client = MongoClient("mongodb://fragrance:fragrance@35.164.86.3:27017/fragrance")
+    # db = client.fragrance
+    # collection = db.perfume_comments
+    # raw_df = pd.DataFrame(list(collection.find({}, {'_id': 0}))) # not including _id column
+    # client.close()
+    all_comments = pd.read_csv('../data/all_comments.csv', encoding='utf-8', index_col=0)
     #############################################################
     # Tokenize corpus
     stpwdlst = get_perfume_stopwords()
-    corpus = get_corpus(raw_df)
+    corpus = get_corpus(all_comments)
     seg_list = split_to_words(corpus)
 
     #############################################################
@@ -111,7 +116,3 @@ def main():
     # print('='*40)
     # print("Topics found by LDA: ")
     # display_topics(lda, tf_feature_names, no_top_words)
-
-
-if __name__ == '__main__':
-    main()

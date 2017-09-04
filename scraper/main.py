@@ -1,4 +1,5 @@
 # Switch to Chinese website instead
+import re
 import csv
 import requests
 import time
@@ -26,13 +27,13 @@ def get_html(url):
     try:
         response = requests.get('https://www.nosetime.com'+url, headers)
     except HTTPError as e:
-        print "Url Can not be found"
+        print ("Url Can not be found")
         return None
     except requests.exceptions.Timeout:
-        print "Timeout error" # Maybe set up for a retry, or continue in a retry loop
+        print ("Timeout error") # Maybe set up for a retry, or continue in a retry loop
         return None
     except requests.exceptions.TooManyRedirects:
-        print "TooManyRedirects error" # Tell the user their URL was bad and try a different one
+        print ("TooManyRedirects error") # Tell the user their URL was bad and try a different one
         return None
     except requests.exceptions.RequestException as e:
         print e # catastrophic error. bail.
@@ -42,8 +43,14 @@ def get_html(url):
 
 def get_brand_urls():
     '''
-    Input: list of brand name start letter webpage urls
-    Output: perfume brand name urls in a list
+    Input:
+    ------
+    List of brand name start letter webpage urls
+
+    Output:
+    ------
+    Perfume brand name urls in a list
+    A dictionary of perfume EN and CN names
     '''
     lst = ['/pinpai/2-a.html','/pinpai/3-b.html','/pinpai/4-c.html',
            '/pinpai/5-d.html','/pinpai/6-e.html','/pinpai/7-f.html',
@@ -55,18 +62,21 @@ def get_brand_urls():
            '/pinpai/23-v.html','/pinpai/24-w.html','/pinpai/25-x.html',
            '/pinpai/26-y.html','/pinpai/27-z.html']
     count = 0
-    brands = []
+    brand_urls = []
+    brand_names = {}
     for url in lst:
         response = get_html(url)
         soup = BeautifulSoup(response.text, 'html.parser')
         result = soup.find_all('a', {'class': 'imgborder'})
         for r in result:
-            brands.append(r.attrs['href'])
-        time.sleep(10) # In case I got blocked
+            brand_urls.append(r.attrs['href'])
+            name = r.next_sibling.text
+            split = re.split(r'([a-zA-Z]+)', name)
+            brand_names[split[0]] = ''.join(split[1:])
+        time.sleep(5) # In case I got blocked
+        print ("Scraped {} urls...".format(count))
         count += 1
-        if count % 10 == 0:
-            print "Scraped {} urls...".format(count)
-    return brands
+    return brand_urls, brand_names
 
 
 def scrape_first_page(brand_urls, range_start, range_end):
@@ -78,7 +88,7 @@ def scrape_first_page(brand_urls, range_start, range_end):
     for url in brand_urls[range_start:range_end]:
         response = get_html(url)
         if response == None:
-            print "Get HTML break at #{} url.".format(count)
+            print ("Get HTML break at #{} url.".format(count))
             break
         soup = BeautifulSoup(response.text, 'html.parser')
         perfume = soup.find_all('a', {'class': 'imgborder'}) # scrape all 1st pages
@@ -98,7 +108,7 @@ def scrape_first_page(brand_urls, range_start, range_end):
         count += 1
         if count % 10 == 0:
             print "Scraped {} page urls...".format(count)
-    print "Done writing perfume urls to csv! Congrats! Save returned pages_list!"
+    print ("Done writing perfume urls to csv! Congrats! Save returned pages_list!")
 
 
 def scrape_other_pages(pages_list):
@@ -112,7 +122,7 @@ def scrape_other_pages(pages_list):
     for url in pages_list:
         response = get_html(url)
         if response == None:
-            print "Get HTML break at #{} url.".format(count)
+            print("Get HTML break at #{} url.".format(count))
             break
         soup = BeautifulSoup(response.text, 'html.parser')
         perfume = soup.find_all('a', {'class': 'imgborder'})
@@ -123,11 +133,11 @@ def scrape_other_pages(pages_list):
         time.sleep(10) # In case I got blocked
         count += 1
         if count % 10 == 0:
-            print "Scraped {} page urls...".format(count)
+            print("Scraped {} page urls...".format(count))
         if count % 90 == 0:
-            print "Take a nap for 8 minutes...Please don't block me!!!"
+            print("Take a nap for 8 minutes...Please don't block me!!!")
             time.sleep(60*8)
-    print "Done writing perfume urls to csv!"
+    print("Done writing perfume urls to csv!")
 
 
 def scrape_perfume_page(perfume_urls):
@@ -144,12 +154,12 @@ def scrape_perfume_page(perfume_urls):
     for url in perfume_urls:
         html_text = get_html(url).text
         if html_text == None:
-            print "Get HTML break at #{} url.".format(count)
+            print("Get HTML break at #{} url.".format(count))
             break
         perfume_html.insert({'url': url, 'html': html_text})
         count += 1
         if count % 100 == 0:
-            print "Scraped {} pages html...".format(count)
+            print("Scraped {} pages html...".format(count))
     client.close()
 
 
@@ -168,11 +178,15 @@ def get_url_list(filename):
 
 
 if __name__ == '__main__':
-    # brands = get_brand_urls()
-    # print "Writing csv file..."
+    brands, brand_names = get_brand_urls()
+    print("Writing csv file...")
     # with open('data/brands.csv','wb') as resultFile:
     #     wr = csv.writer(resultFile, dialect='excel')
     #     wr.writerow(brands)
+     with open('../data/brand_names.csv','wb') as resultFile:
+         wr = csv.writer(resultFile, dialect='excel')
+         for key, value in brand_names.items():
+             wr.writerow([key.encode('utf-8'), value.encode('utf-8')])
     # print "Finished writing csv file..."
     # brands = read_data('data/brands.csv')
     # n1, n2 = sys.argv[1], sys.argv[2]
@@ -182,11 +196,11 @@ if __name__ == '__main__':
     # print "Getting pages list..."
     # get_pages_list(brands, int(n1), int(n2)) # deprecated function
 
-    pages = get_url_list('data/pages.csv')
-    print "Scraping other pages for perfume urls..."
-    scrape_other_pages(pages)
-    print "Converting perfumes csv file to a list..."
-    perfumes = get_url_list('data/perfumes_2.csv')
-    print "Inserting perfumes html to MongoDB..."
-    scrape_perfume_page(perfumes)
-    print "Woohoo, done! Congrats! "
+    # pages = get_url_list('data/pages.csv')
+    # print "Scraping other pages for perfume urls..."
+    # scrape_other_pages(pages)
+    # print "Converting perfumes csv file to a list..."
+    # perfumes = get_url_list('data/perfumes_2.csv')
+    # print "Inserting perfumes html to MongoDB..."
+    # scrape_perfume_page(perfumes)
+    # print "Woohoo, done! Congrats! "

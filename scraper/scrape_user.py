@@ -81,6 +81,7 @@ def scrape_all_pages(page_url):
             attributes = {}
             attributes['perfume_id'] = perfume_id # add perfume_id for each rating record
             attributes['rated_user_id'] = d.find('a')['href'] # member_id
+            attributes['short_comment'] = d.find('div', {'class': 'hfshow1'}).text
             if d.find('span') != None:
                 attributes['user_rating'] = int(d.find('span')['class'][1][2:]) # actual rating, 2nd element in a list
             else:
@@ -91,9 +92,6 @@ def scrape_all_pages(page_url):
             short_ratings.insert_many(attributes_list) # insert to mongodb
         else:
             print "Perfume ID {} has no reviews.".format(perfume_id)
-        time.sleep(10) # In case I got blocked
-    else:
-        print "URL content cannot be fetched"
         pass
 
 
@@ -102,24 +100,24 @@ if __name__ == '__main__':
     client = MongoClient("mongodb://fragrance:fragrance@35.164.86.3:27017/fragrance")
     fragrance = client.fragrance
     short_ratings = fragrance.short_ratings
-    print "Get all perfume id to a list..."
-    # perfume_ids = get_perfume_id()
-    perfume_ids = read_data('data/rated_perfume_id.csv') # 21,023 perfumes
-    n1, n2 = sys.argv[1], sys.argv[2]
-    print "Scraping first page user ratings..."
-    count = 0
-    for pid in perfume_ids[int(n1):int(n2)]: # altogether we have 22,358 perfumes
-        scrape_one_page(pid)
-        print "Scraped {} first page urls...".format(count)
-        count += 1
+    # print "Get all perfume id to a list..."
+    # # perfume_ids = get_perfume_id()
+    # perfume_ids = read_data('data/rated_perfume_id.csv') # 21,023 perfumes
+    # n1, n2 = sys.argv[1], sys.argv[2]
+    # print "Scraping first page user ratings..."
+    # count = 0
+    # for pid in perfume_ids[int(n1):int(n2)]: # altogether we have 22,358 perfumes
+    #     scrape_one_page(pid)
+    #     print "Scraped {} first page urls...".format(count)
+    #     count += 1
 
     print "Done inserting first page ratings to MongoDB!"
-    # print "-"*40
-    # print "Scraping non-first page comment urls..."
-    # page_urls = get_url_list('data/comment_pages_ratings_0901.csv')
-    # count2 = 0
-    # for page in page_urls:
-    #     scrape_all_pages(page)
-    #     print "Scraped {} non-first page urls...".format(count2)
-    #     count2 += 1
-    # print "Woohoooo!! Done inserting non-first page ratings to mongodb! "
+    print "-"*40
+    print "Scraping non-first page comment urls..."
+    page_urls = get_url_list('data/comment_pages_ratings_deduped.csv')
+    count2 = 0
+    for page in page_urls:
+        scrape_all_pages(page)
+        print "Scraped {} non-first page urls...".format(count2)
+        count2 += 1
+    print "Woohoooo!! Done inserting non-first page ratings to mongodb! "

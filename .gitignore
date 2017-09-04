@@ -9,5 +9,6 @@ data/
 dump/
 pickled_models/
 webapp_test/
+cn_en/
 __pycache__/
 mongo_backup.py
