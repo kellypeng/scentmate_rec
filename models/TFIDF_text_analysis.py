@@ -76,16 +76,16 @@ if __name__ == '__main__':
     corpus = get_corpus(raw_df)
     seg_list = split_to_words(corpus)
     #############################################################
-    # Fit to TFIDF
-    # tfidf_vectorizer, tfidf_docs = get_tfidf_mat(seg_list, stop_words=stpwdlst, max_features=1000)
-    # feature_names = np.array(tfidf_vectorizer.get_feature_names())
-    # print("Word List:")
-    # print(feature_names)
-    # print("TF IDF Vector：")
-    # print(tfidf_docs.toarray())
-    # print("Top features for each perfume: ")
-    # top_features, top_features_idx = find_top_features(15, tfidf_docs.toarray())
-    # print(top_features)
+    Fit to TFIDF
+    tfidf_vectorizer, tfidf_docs = get_tfidf_mat(seg_list, stop_words=stpwdlst, max_features=1000)
+    feature_names = np.array(tfidf_vectorizer.get_feature_names())
+    print("Word List:")
+    print(feature_names)
+    print("TF IDF Vector：")
+    print(tfidf_docs.toarray())
+    print("Top features for each perfume: ")
+    top_features, top_features_idx = find_top_features(15, tfidf_docs.toarray())
+    print(top_features)
     # #############################################################
     # # Get top features corresponding perfume names, save to csv
     # df = pd.DataFrame(top_features)

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html >
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>ScentMate Perfume Recommender</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="static/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="static/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Cormorant:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="static/css/style.css" rel="stylesheet">
+
+</head>
+
+
+<body>
+  <div class="recommendations">
+    <!-- <div class="login-page"> -->
+      <div class="form">
+        <form class="login-form" action = "/predict" method="POST">
+          <input type="text" placeholder="perfume id"/>
+          <button> <input type ="submit" value="Find Similar Perfumes" /> </button>
+        </form>
+      </div>
+    <!-- </div> -->
+  </div>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <ul class="list-inline">
+      <li class="list-inline-item">
+        <a href="/">Home</a>
+      </li>
+      <li class="footer-menu-divider list-inline-item">&sdot;</li>
+      <li class="list-inline-item">
+        <a href="#about">About ScentMate</a>
+      </li>
+      <li class="footer-menu-divider list-inline-item">&sdot;</li>
+      <li class="list-inline-item">
+        <a href="#contact">Contact</a>
+      </li>
+    </ul>
+    <p class="copyright text-muted small">Copyright &copy; ScentMate 2017. All Rights Reserved</p>
+  </div>
+</footer>
+
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="static/vendor/jquery/jquery.min.js"></script>
+  <script src="static/vendor/popper/popper.min.js"></script>
+  <script src="static/vendor/bootstrap/js/bootstrap.min.js"></script>
+
+</body>
+</html>

@@ -23,8 +23,8 @@ def short_comments_df(short_ratings_df):
     dataframe, perfume_id as index, perfume short comments as another column
     '''
     scomments = defaultdict(list)
-    for pid in short_ratings['perfume_id'].unique():
-        df = short_ratings[(short_ratings['perfume_id'] == pid)]
+    for pid in short_ratings_df['perfume_id'].unique():
+        df = short_ratings_df[(short_ratings_df['perfume_id'] == pid)]
         for c in df['short_comment']:
             scomments[pid].append(c)
     stacked = pd.DataFrame.from_dict(scomments, orient='index').stack().sum(level=0) # aggregate comments to perfume id
@@ -45,19 +45,13 @@ def combine_comments(short_comments_df, long_comments_df):
     joined df, two columns, perfume id and all comments
     '''
     long_comments_df.set_index('perfume_id', inplace=True)
-    all_comments = pd.merge(short_comments_df, long_comments_df,
-                            how='left', left_index=True, right_index=True)
-    all_comments.rename(columns={'comments':'long_comments'}, inplace=True)
-    all_comments['all_comments'] = ','.join(str(i) for i in all_comments['long_comments']) + all_comments['short_comments']
-    all_comments.drop(all_comments[['short_comments', 'long_comments', 'url']], axis=1, inplace=True)
+    long_comments_df['long_comments'] = long_comments_df['comments'].apply(','.join)
+    all_comments = pd.merge(short_comments_df, long_comments_df, how='left', left_index=True, right_index=True)
+    all_comments = all_comments.fillna('.')
+    all_comments['all_comments'] = all_comments['short_comments'] + all_comments['long_comments']
+    all_comments.drop(['comments', 'short_comments', 'long_comments', 'url'], axis=1, inplace=True)
+    all_comments = all_comments.reset_index().rename(columns={'index':'perfume_id'})
     return all_comments
-
-
-
-
-
-
-
 
 
 
@@ -73,4 +67,4 @@ if __name__ == '__main__':
     short_comments_df = short_comments_df(short_ratings)
     all_comments_df = combine_comments(short_comments_df, long_comments)
     # Write to csv
-    # all_comments_df.to_csv('../data/all_comments.csv', encoding='utf-8')
+    all_comments_df.to_csv('../data/all_comments.csv', encoding='utf-8')

@@ -38,11 +38,23 @@ def tag_dict():
     joined.rename(columns={' 0':'tag_en'}, inplace=True)
     joined.set_index('tag_cn', inplace=True)
     joined = joined.to_dict(orient='dict')
-    joined = list(joined.values())[0] # access dict inside dict 
+    joined = list(joined.values())[0] # access dict inside dict
     return joined
+
+def theme_dict():
+    '''Takes in csv file with two columns: CN and EN themes.
+    Convert into dictionary for visualization
+    '''
+    theme = pd.read_csv('../cn_en/themes.csv', encoding='utf-8')
+    theme.set_index('CN', inplace=True)
+    theme = theme.to_dict(orient='dict')
+    theme = list(theme.values())[0]
+    return theme
+
 
 if __name__ == '__main__':
     brand_dict = brand_dict()
     note_dict = note_dict()
     tag_dict = tag_dict()
     gender_dict = gender_dict()
+    theme_dict = theme_dict()

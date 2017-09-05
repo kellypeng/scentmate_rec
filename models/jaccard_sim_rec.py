@@ -32,7 +32,7 @@ class JaccardSimRec(object):
         i = 0
         while i <= self.n_rec:
             rec = str(self.perfume_df.index[rec_index[i]])
-            if rec != perfume_id:
+            if rec != str(perfume_id):
                 recommendations.append(rec)
             i += 1
         return recommendations
@@ -82,5 +82,5 @@ if __name__ == '__main__':
 
     jd = JaccardSimRec(n_rec=5)
     # jd.fit(perfume_df)
-    # with open('jaccard_model.pkl', 'wb') as f:
-    #     pickle.dump(jd, f)
+    with open('pickled_models/jaccard_model.pkl', 'wb') as f:
+        pickle.dump(jd, f)

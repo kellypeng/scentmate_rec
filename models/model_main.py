@@ -6,6 +6,7 @@ import numpy as np
 from pymongo import MongoClient
 
 
+
 def prepare_item_mat(perfume_df):
     '''Takes in MongoDB perfume features table, returns item matrix
 
@@ -22,13 +23,16 @@ def prepare_item_mat(perfume_df):
     df.set_index(df['perfume_id'], inplace=True)
     note = df['note'].apply(pd.Series) # 653 notes
     note_matrix = pd.get_dummies(note.apply(pd.Series).stack()).sum(level=0).rename(columns = lambda x : 'note_' + x)
-    tags = df['tags'].apply(pd.Series) # 75 tags, excluded tags because overlap with notes
-    tag_matrix = pd.get_dummies(tags.apply(pd.Series).stack()).sum(level=0).rename(columns = lambda x: 'tag_' + x)
+    # tags = df['tags'].apply(pd.Series) # 75 tags, excluded tags because overlap with notes
+    # tag_matrix = pd.get_dummies(tags.apply(pd.Series).stack()).sum(level=0).rename(columns = lambda x: 'tag_' + x)
     theme = df['theme'].apply(pd.Series) # 31 themes
     theme_matrix = pd.get_dummies(theme.apply(pd.Series).stack()).sum(level=0).rename(columns = lambda x: 'theme_' + x)
     gender = df['gender'].apply(pd.Series)
     gender_matrix = pd.get_dummies(gender.apply(pd.Series).stack()).sum(level=0).rename(columns = lambda x: 'gender_' + x)
-    item_matrix = note_matrix.join(tag_matrix).join(theme_matrix).join(gender_matrix) # join together the four matrices
+    # concat keywords_df with item_matrix for final item matrix
+    keywords_df = pd.read_csv('../data/perfume_keywords_matrix.csv')
+    keyword_matrix = keywords_df.set_index('perfume_id') # only rated perfumes will have keywords from comments
+    item_matrix = note_matrix.join(keyword_matrix).join(theme_matrix).join(gender_matrix) # join together the four matrices
     item_matrix.fillna(0, inplace=True) # fill in null values with 0
     return item_matrix
 

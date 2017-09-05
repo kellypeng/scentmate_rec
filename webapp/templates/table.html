@@ -17,7 +17,7 @@
     <link href="https://fonts.googleapis.com/css?family=Cormorant:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i" rel="stylesheet">
     <!-- Custom styles for this template -->
-    <link href="static/css/landing-page.css" rel="stylesheet">
+    <link href="static/css/style.css" rel="stylesheet">
 
   </head>
 
@@ -25,7 +25,7 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
       <div class="container">
-        <a class="navbar-brand" href="#">ScentMate</a>
+        <a class="navbar-brand" href="/">ScentMate</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
@@ -46,19 +46,21 @@
     </nav>
 
   <!-- Result -->
-
+  <div class="recommendations">
     {% if perfume_id %}
     {% for element in entered%}
     <p>I see, you like {{ element['item_name'] }}. </p>
-    <p> This is a {{ element['gender'] }}. </p>
-    <p> The key features of this fragrance is {{ element['note'] }} </p>
+    <p> This is a {{ element['theme_en'] }} {{ element['gender_en'] }} fragrance of {{ element['brand_en'] }}. </p>
+    <p> The key features of this fragrance are: {{ element['note_en']|join(',') }} </p>
     <p> When you are wearing this perfume, people will think of you as ...(need futther NLP work) </p>
-    <p> And because you like {{ element['item_name'] }}, we found some perfumes you may also like...</p>
+    <p> And because you like {{ element['item_name'] }}, we found some perfumes you will also like:</p>
     {% endfor %}
     {% else %}
-    <form>
+  </div>
+
+    <form class="form">
       <input type='text' name='perfume_id' placeholder='Perfume ID'/>
-      <input type='submit' value='Submit' />
+      <input type='submit' value='Find Similar' />
     </form>
     {% endif %}
 
@@ -74,10 +76,10 @@
       <tbody>
         {% for element in recs%}
           <tr>
-            <td>{{ element['brand'] }}</td>
+            <td>{{ element['brand_en'] }}</td>
             <td>{{ element['item_name'] }}</td>
             <td>{{ element['gender_en']}}</td>
-            <td>{{ element['theme']}}</td>
+            <td>{{ element['theme_en']}}</td>
             <td>{{ element['note_en']|join(',')}}</td>
           </tr>
         {% endfor %}
@@ -85,83 +87,31 @@
     </table>
     {% endif %}
 
-  <section class="content-section-a">
 
-    <div class="container">
+<div class='space'>
+</div>
 
-      <div class="row">
-        <div class="col-lg-5 ml-auto">
-          <div class="clearfix"></div>
-          <h2 class="section-heading"></h2>
-        </div>
-        <div class="col-lg-5 mr-auto ">
-          <img class="img-fluid" src="img/phones.png" alt="">
-        </div>
-      </div>
-
-    </div>
-    <!-- /.container -->
-
-  </section>
-  <!-- /.content-section-a -->
-
-  <aside class="banner">
-
-    <div class="container">
-
-      <div class="row">
-        <div class="col-lg-6 my-auto">
-          <h2>Connect to Kelly Peng:</h2>
-        </div>
-        <div class="col-lg-6 my-auto">
-          <ul class="list-inline banner-social-buttons">
-          </li>
+    <!-- Footer -->
+    <footer>
+      <div class="container">
+        <ul class="list-inline">
           <li class="list-inline-item">
-            <a href="https://www.linkedin.com/in/pengyuwei/" class="btn btn-secondary btn-lg">
-              <i class="fa fa-linkedin fa-fw"></i>
-              <span class="network-name">Linkedin</span>
-            </a>
+            <a href="/">Home</a>
           </li>
-            <li class="list-inline-item">
-              <a href="https://github.com/kellypeng" class="btn btn-secondary btn-lg">
-                <i class="fa fa-github fa-fw"></i>
-                <span class="network-name">Github</span>
-              </a>
-            <li class="list-inline-item">
-              <a href="https://twitter.com/KellyYuweiPeng" class="btn btn-secondary btn-lg">
-                <i class="fa fa-twitter fa-fw"></i>
-                <span class="network-name">Twitter</span>
-              </a>
-            </li>
-          </ul>
-        </div>
+          <li class="footer-menu-divider list-inline-item">&sdot;</li>
+          <li class="list-inline-item">
+            <a href="#about">About ScentMate</a>
+          </li>
+          <li class="footer-menu-divider list-inline-item">&sdot;</li>
+          <li class="list-inline-item">
+            <a href="#contact">Contact</a>
+          </li>
+        </ul>
+        <p class="copyright text-muted small">Copyright &copy; ScentMate 2017. All Rights Reserved</p>
       </div>
+    </footer>
 
-    </div>
-    <!-- /.container -->
 
-  </aside>
-  <!-- /.banner -->
-
-  <!-- Footer -->
-  <footer>
-    <div class="container">
-      <ul class="list-inline">
-        <li class="list-inline-item">
-          <a href="#">Home</a>
-        </li>
-        <li class="footer-menu-divider list-inline-item">&sdot;</li>
-        <li class="list-inline-item">
-          <a href="#about">About</a>
-        </li>
-        <li class="footer-menu-divider list-inline-item">&sdot;</li>
-        <li class="list-inline-item">
-          <a href="#contact">Contact</a>
-        </li>
-      </ul>
-      <p class="copyright text-muted small">Copyright &copy; ScentMate 2017. All Rights Reserved</p>
-    </div>
-  </footer>
 
   <!-- Bootstrap core JavaScript -->
   <script src="static/vendor/jquery/jquery.min.js"></script>

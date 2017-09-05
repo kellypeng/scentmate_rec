@@ -17,7 +17,7 @@
   <link href="https://fonts.googleapis.com/css?family=Cormorant:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i" rel="stylesheet">
   <!-- Custom styles for this template -->
-  <link href="static/css/landing-page.css" rel="stylesheet">
+  <link href="static/css/style.css" rel="stylesheet">
 
 </head>
 
@@ -26,7 +26,7 @@
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container">
-      <a class="navbar-brand" href="#">ScentMate</a>
+      <a class="navbar-brand" href="/">ScentMate</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -46,13 +46,10 @@
     </div>
   </nav>
 
+<div class="recommendations">
   <!-- Recommendation -->
-  <p>I see, you are looking for a {{ features['gender'][0] }} product. </p>
-  <p> The notes you like are:  {{ features['note']|join(',') }}</p>
-  <p> The themes you like are:  {{ features['theme']|join(',') }}</p>
-  <p> The key features of this fragrance is {{ features['theme']|join(',')  }} </p>
-  <p> When you are wearing this perfume, people will think of you as ...(need futther NLP work) </p>
-  <h3> Because you like these features, we found 5 perfumes matches you the best...</h3>
+  <h3> Based on what you like, we found 5 perfumes match you the best: </h3>
+</div>
 
 <table class="table table-striped" align='center'>
   <thead>
@@ -70,7 +67,7 @@
         <td>{{ element['brand_en'] }}</td>
         <td>{{ element['item_name'] }}</td>
         <td>{{ element['gender_en']}}</td>
-        <td>{{ element['theme']}}</td>
+        <td>{{ element['theme_en']}}</td>
         <td>{{ element['note_en']|join(',')}}</td>
       </tr>
     {% endfor %}
@@ -93,6 +90,7 @@
 
   </div>
   <!-- /.container -->
+
 
 </section>
 <!-- /.content-section-a -->

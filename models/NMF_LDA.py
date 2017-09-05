@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 import jieba
 import jieba.posseg as pseg
+import short_ratings as sr
 from pymongo import MongoClient
 from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
@@ -65,20 +66,61 @@ def hand_label_topics(H, vocabulary):
         print
     return hand_labels
 
+def get_keywords_mat():
+    '''
+    Get 12 topics from LDA, add keywords features to rated perfumes.
+    Return a dataframe with perfume_id and keywords
 
+    Parameters:
+    ----------
+    LDA fit_transform(tf_docs)
+
+    Returns:
+    ------
+    perfume_keywords_df. index: perfume_id, columns: keyword names, values: 1/0
+    '''
+    # manually label 12 topics generatd from LDA
+    topic_dict = {0: (u'甜美', u'甜蜜', u'甜味', u'美食', u'香草', u'柔滑'),
+                  1: (u'温柔', u'优雅', u'成熟', u'女人', u'脂粉', u'性感'),
+                  2: (u'清新', u'柑橘', u'经典', u'琥珀', u'老香', u'东方调'),
+                  3: (u'白花系', u'清新', u'淡雅', u'茶香', u'平易近人', u'邻家女孩'),
+                  4: (u'少女', u'果香', u'甜美', u'可爱', u'活泼', u'甜蜜'),
+                  5: (u'清新', u'干净', u'夏天', u'清爽', u'舒服', u'清凉'),
+                  6: (u'玫瑰', u'温柔', u'少女', u'牡丹', u'女人味', u'清新'),
+                  7: (u'辛辣', u'温暖', u'男人味', u'温柔', u'稳重', u'成熟'),
+                  8: (u'东方调', u'焚香', u'神秘', u'辛辣', u'深沉', u'柔和'),
+                  9: (u'美食', u'甜蜜', u'温暖', u'甜味', u'浓郁', u'冬天'),
+                  10: (u'无花果', u'清新', u'青草', u'绿叶调', u'植物', u'夏天'),
+                  11: (u'经典', u'大牌', u'奢华', u'广为人知', u'商业香', u'广告多见')}
+    perfume_kw_dict = {}
+    for idx, item in enumerate(lda_left):
+        perfume_kw_dict[idx] = topic_dict[np.argmax(item)]
+    # convert dictionary to dataframe for join convenience
+    perfume_topic_df = pd.DataFrame.from_dict(perfume_kw_dict, orient='index')
+    perfume_topic_df = perfume_topic_df.fillna(' ')
+    keywords_matrix = pd.get_dummies(perfume_topic_df.apply(pd.Series).stack() \
+                      ).sum(level=0).rename(columns = lambda x: 'keywords_' + x)
+    perfume_keywords_df = all_comments_df.join(keywords_matrix)
+    perfume_keywords_df.drop('all_comments', axis=1, inplace=True)
+    perfume_keywords_df.set_index('perfume_id', inplace=True)
+    return perfume_keywords_df
 
 
 if __name__ == '__main__':
-    # client = MongoClient("mongodb://fragrance:fragrance@35.164.86.3:27017/fragrance")
-    # db = client.fragrance
-    # collection = db.perfume_comments
-    # raw_df = pd.DataFrame(list(collection.find({}, {'_id': 0}))) # not including _id column
-    # client.close()
-    all_comments = pd.read_csv('../data/all_comments.csv', encoding='utf-8', index_col=0)
+    client = MongoClient("mongodb://fragrance:fragrance@35.164.86.3:27017/fragrance")
+    db = client.fragrance
+    short_ratings = db.short_ratings
+    short_ratings = pd.DataFrame(list(short_ratings.find({}, {'_id': 0})))
+    perfume_comments = db.perfume_comments
+    long_comments = pd.DataFrame(list(perfume_comments.find({}, {'_id': 0})))
+    client.close()
+    # Data preprocessing
+    short_comments_df = sr.short_comments_df(short_ratings)
+    all_comments_df = sr.combine_comments(short_comments_df, long_comments)
     #############################################################
     # Tokenize corpus
     stpwdlst = get_perfume_stopwords()
-    corpus = get_corpus(all_comments)
+    corpus = get_corpus(all_comments_df)
     seg_list = split_to_words(corpus)
 
     #############################################################
@@ -98,21 +140,18 @@ if __name__ == '__main__':
     tf_feature_names = countvectorizer.get_feature_names()
 
     #############################################################
-    no_topics = 8
+    no_topics = 12
     # Run NMF
-    nmf = NMF(n_components=no_topics, random_state=1, alpha=.1, l1_ratio=.5, init='nndsvd').fit(tfidf_docs)
+    nmf = NMF(n_components=no_topics, alpha=.1, l1_ratio=.5, init='nndsvd').fit(tfidf_docs)
     # Run LDA
-    # lda = LatentDirichletAllocation(n_topics=no_topics, max_iter=5, learning_method='online', learning_offset=50.,random_state=0).fit(tf_docs)
+    lda = LatentDirichletAllocation(n_topics=no_topics, max_iter=5, learning_method='online', learning_offset=50.,random_state=0).fit(tf_docs)
 
     #############################################################
     no_top_words = 20
     print("Topics found by NMF: ")
     display_topics(nmf, tfidf_feature_names, no_top_words)
-    print("NMF left W matrix: ")
-    W = nmf.fit_transform(tfidf_docs)
-    print("NMF right H matrix: ")
-    H = nmf.components_
-    print('reconstruction error:', nmf.reconstruction_err_)
-    # print('='*40)
-    # print("Topics found by LDA: ")
-    # display_topics(lda, tf_feature_names, no_top_words)
+    print('='*40)
+    print("Topics found by LDA: ")
+    display_topics(lda, tf_feature_names, no_top_words)
+    # End up with LDA with 12 topics
+    lda_left = lda.fit_transform(tf_docs)
