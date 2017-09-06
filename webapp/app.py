@@ -77,12 +77,12 @@ def login():
 #                                             'note':1, 'tags':1, 'theme':1, '_id':0}))
 #         return render_template('recommend.html', rec_perfumes=rec_perfumes)
 
-
+# Quiz questions landing page
 @app.route('/quiz')
 def quiz():
 	return render_template('quiz.html')
 
-# predict based on user input
+# Predict based on user's answers of quiz questions
 @app.route('/getmatch',methods=['POST','GET'])
 def get_match():
     if request.method=='POST':
