@@ -5,7 +5,7 @@ import json
 import pandas as pd
 import numpy as np
 import _pickle as pickle
-import cn_en_dict as dt
+import cn_en_dict as dt # translation from Chinese to English
 # import graphlab as gl
 from flask import Flask, render_template, request
 from collections import defaultdict
@@ -33,7 +33,7 @@ def recs(perfume_id=None):
     note_dict = dt.note_dict()
     gender_dict = dt.gender_dict()
     theme_dict = dt.theme_dict()
-    entered = list(collection.find({'perfume_id':str(perfume_id)},  {'item_name':1,
+    entered = list(collection.find({'perfume_id':str(perfume_id)}, {'item_name':1,
     'brand':1, 'gender':1, 'note':1, 'tags':1, 'theme':1, '_id':0}))
     for elm in entered:
         try:
@@ -43,7 +43,6 @@ def recs(perfume_id=None):
             elm['note_en'] = [note_dict[note] for note in elm['note']]
         except:
             pass
-
     if perfume_id != None:
         recommendations = model.predict_one(str(perfume_id)) # recs is a list of perfume_id in string format
         recs = list(collection.find({'perfume_id': {'$in': recommendations}},  {'item_name':1,

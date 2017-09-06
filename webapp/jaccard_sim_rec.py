@@ -32,7 +32,7 @@ class JaccardSimRec(object):
         i = 0
         while i <= self.n_rec:
             rec = str(self.perfume_df.index[rec_index[i]])
-            if rec != perfume_id:
+            if rec != str(perfume_id):
                 recommendations.append(rec)
             i += 1
         return recommendations
@@ -57,11 +57,30 @@ class JaccardSimRec(object):
         return recommendations
 
 
+def pickle_idx_dict(perfume_df):
+    '''We need to create our feature vector of exact same dimension as our
+    training set. To convert our user input into dummy variables,
+    we should save a dict of the the dummy variables.
+    Later we can populate our feature vector for prediction using this dict.
+
+    Input:
+    -----
+    perfume_df
+
+    Output:
+    -----
+    perfume_df column indices pickle file
+    '''
+    index_dict = dict(zip(perfume_df.columns,range(perfume_df.shape[1])))
+    with open('pickled_models/perfume_df.pkl', 'wb') as fid:
+        pickle.dump(index_dict, fid)
+
 
 if __name__ == '__main__':
     perfume_df = pd.read_csv('../data/rated_item_matrix.csv')
     perfume_df.set_index('perfume_id', inplace=True)
+
     jd = JaccardSimRec(n_rec=5)
     jd.fit(perfume_df)
-    # with open('jaccard_model.pkl', 'wb') as f:
+    # with open('pickled_models/jaccard_model.pkl', 'wb') as f:
     #     pickle.dump(jd, f)

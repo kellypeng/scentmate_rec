@@ -45,8 +45,17 @@
       </div>
     </nav>
 
+    <!-- Header -->
+    <header class="intro-header">
+      <div class="container">
+        <div class="col-lg-5 mr-auto order-lg-2">
+        <h3><br>Tell me what you liked before... </h3>
+        </div>
+      </div>
+    </header>
+
+
   <!-- Result -->
-  <div class="recommendations">
     {% if perfume_id %}
     {% for element in entered%}
     <p>I see, you like {{ element['item_name'] }}. </p>
@@ -58,10 +67,41 @@
     {% else %}
   </div>
 
+  <div class="recommendations">
     <form class="form">
+      <p>
+        <label>Select the perfume you liked before</label>
+        <select name="perfume_id">
+          <option value="249612">Dior J`adore, 1999</option>
+          <option value="246211">Dior Pure Poison, 2004</option>
+          <option value="855874">Dior Sauvage, 2015</option>
+          <option value="834568">Dior Homme, 2005</option>
+          <option value="306023">Dior Miss Dior 2012</option>
+          <option value="997029">Chanel N°5, 1921</option>
+          <option value="328164">Chanel Chance Eau Tendre, 2010</option>
+          <option value="440460">Chanel Chance Eau de Toilette, 2003</option>
+          <option value="331972">Chanel No 5 Eau de Toilette, 1921</option>
+          <option value="449262">Hermes Terre d'Hermes, 2006</option>
+          <option value="251428">Hermes Un Jardin Sur Le Nil, 2005</option>
+          <option value="476435">Hermes Eau des Merveilles, 2004</option>
+          <option value="315972">Hermes Un Jardin Sur Le Toit, 2011</option>
+          <option value="118712">Guerlain Shalimar, 1925</option>
+          <option value="263287">Guerlain Mitsouko Eau de Toilette, 1919</option>
+          <option value="175472">Guerlain Vol de Nuit, 1933</option>
+          <option value="884138">Guerlain Samsara Eau de Parfum, 1989</option>
+        </select>
+        <input type='submit' value='Find Similar' />
+      </p>
+    </form>
+  </div>
+
+  <div>
+    <form class="form">
+      <label>OR enter the perfume ID for the perfume you liked before</label>
       <input type='text' name='perfume_id' placeholder='Perfume ID'/>
       <input type='submit' value='Find Similar' />
     </form>
+  </div>
     {% endif %}
 
     {% if perfume_id %}
