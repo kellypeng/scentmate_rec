@@ -61,7 +61,6 @@
     <p>I see, you like {{ element['item_name'] }}. </p>
     <p> This is a {{ element['theme_en'] }} {{ element['gender_en'] }} fragrance of {{ element['brand_en'] }}. </p>
     <p> The key features of this fragrance are: {{ element['note_en']|join(',') }} </p>
-    <p> When you are wearing this perfume, people will think of you as ...(need futther NLP work) </p>
     <p> And because you like {{ element['item_name'] }}, we found some perfumes you will also like:</p>
     {% endfor %}
     {% else %}
@@ -70,7 +69,7 @@
   <div class="recommendations">
     <form class="form">
       <p>
-        <label>Select the perfume you liked before</label>
+        <label>Select the perfume you liked before (We are giving you some examples)</label>
         <select name="perfume_id">
           <option value="249612">Dior J`adore, 1999</option>
           <option value="246211">Dior Pure Poison, 2004</option>
@@ -97,7 +96,7 @@
 
   <div>
     <form class="form">
-      <label>OR enter the perfume ID for the perfume you liked before</label>
+      <label>OR enter the perfume ID for the perfume you liked before (Need to look up in database)</label>
       <input type='text' name='perfume_id' placeholder='Perfume ID'/>
       <input type='submit' value='Find Similar' />
     </form>
