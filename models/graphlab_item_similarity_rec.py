@@ -33,8 +33,8 @@ def tune_only_top_k(train, test):
 
 
 if __name__ == '__main__':
-    train = pd.read_csv('/Users/kellypeng/Documents/Tech/github/Galvanize/scent_cn_rec/data/train_valid_test/utility_train_train.csv')
-    valid = pd.read_csv('/Users/kellypeng/Documents/Tech/github/Galvanize/scent_cn_rec/data/train_valid_test/utility_train_valid.csv')
+    train = pd.read_csv('../data/train_valid_test/utility_train_train.csv')
+    valid = pd.read_csv('../data/train_valid_test/utility_train_valid.csv')
     # convert to SFrame
     train = gl.SFrame(train)
     valid = gl.SFrame(valid)

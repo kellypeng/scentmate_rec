@@ -33,7 +33,7 @@ class CosineSimilarityRec(object):
 
 
 if __name__ == '__main__':
-    perfume_df = pd.read_csv('/Users/kellypeng/Documents/Tech/github/Galvanize/scent_cn_rec/data/item_matrix.csv')
+    perfume_df = pd.read_csv('../data/item_matrix.csv')
     perfume_df.set_index('perfume_id', inplace=True)
     cs = CosineSimilarityRec(n_rec=5)
     cs.fit(perfume_df)

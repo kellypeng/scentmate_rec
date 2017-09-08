@@ -112,4 +112,4 @@ if __name__ == '__main__':
     s = s.reset_index()
     output = pd.merge(df_cnt, s, how='left', left_on='index', right_on='index')
     output.drop('index', axis=1, inplace=True)
-    output.to_csv('/Users/kellypeng/Documents/Tech/github/Galvanize/scent_cn_rec/data/perfume_top_features_cntvec.csv', encoding='utf-8')
+    output.to_csv('../data/perfume_top_features_cntvec.csv', encoding='utf-8')
