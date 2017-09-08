@@ -1,5 +1,6 @@
 # Switch to Chinese website instead
 import re
+import os
 import csv
 import requests
 import time
@@ -9,9 +10,8 @@ from bs4 import BeautifulSoup # Used to parse the HTML content of web pages
 from fake_useragent import UserAgent
 from pymongo import MongoClient
 
-# import os
-# FRAGANCE_USER = os.environ['MONGO_USER2']
-# FRAGANCE_PW = os.environ['MONGO_USER2_PW']
+fragrance_un = os.environ.get('FRAGRANCE_UN')
+fragrance_pw = os.environ.get('FRAGRANCE_PW')
 
 def read_data(filename):
     with open(filename) as f:
@@ -20,8 +20,6 @@ def read_data(filename):
 
 
 def get_html(url):
-    # headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) \
-    #            AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
     ua = UserAgent()
     headers = {'User-Agent': ua.random}
     try:
@@ -146,8 +144,7 @@ def scrape_perfume_page(perfume_urls):
     Input: list of perfume urls
     Output: url, html, stored into MongoDB ec2 instance
     '''
-    # client = MongoClient("mongodb://{}:{}@35.164.86.3:27017/fragrance".format(FRAGANCE_USER, FRAGANCE_PW)) # Run bash file upfront
-    client = MongoClient("mongodb://fragrance:fragrance@35.164.86.3:27017/fragrance")
+    client = MongoClient("mongodb://{}:{}@35.164.86.3:27017/fragrance".format(fragrance_un, fragrance_pw))
     fragrance = client.fragrance
     perfume_html = fragrance.perfume_html
     count = 0

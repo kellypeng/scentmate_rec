@@ -3,6 +3,7 @@
 # 2. comment page url: "/itmcomment.php?id={}&o=u&page={}#/list".format(id, page_number)
 # example: https://www.nosetime.com/itmcomment.php?id=251428&o=u&page=1#/list
 # 3. Insert data to mongodb ratings collection
+import os
 import csv
 import time
 import re
@@ -12,17 +13,16 @@ from bs4 import BeautifulSoup
 from collections import defaultdict
 from main import *
 
-
-# def get_perfume_id():
-#     '''Get url from mongodb, only return number in the url
-#     '''
-#     perfume_html = fragrance.perfume_html
-#     raw_data_iterator = perfume_html.find()
-#     perfume_ids = []
-#     for f in raw_data_iterator:
-#         for v in re.findall(r'(/[0-9]*-)', f['url']):
-#             perfume_ids.append(v[1:-1])
-#     return perfume_ids
+def get_perfume_id():
+    '''Get url from mongodb, only return number in the url
+    '''
+    perfume_html = fragrance.perfume_html
+    raw_data_iterator = perfume_html.find()
+    perfume_ids = []
+    for f in raw_data_iterator:
+        for v in re.findall(r'(/[0-9]*-)', f['url']):
+            perfume_ids.append(v[1:-1])
+    return perfume_ids
 
 def read_data(filename):
     with open(filename) as f:
@@ -97,19 +97,21 @@ def scrape_all_pages(page_url):
 
 if __name__ == '__main__':
     print "Scraping for rating data..."
-    client = MongoClient("mongodb://fragrance:fragrance@35.164.86.3:27017/fragrance")
+    fragrance_un = os.environ.get('FRAGRANCE_UN')
+    fragrance_pw = os.environ.get('FRAGRANCE_PW')
+    client = MongoClient("mongodb://{}:{}@35.164.86.3:27017/fragrance".format(fragrance_un, fragrance_pw))
     fragrance = client.fragrance
     short_ratings = fragrance.short_ratings
-    # print "Get all perfume id to a list..."
-    # # perfume_ids = get_perfume_id()
-    # perfume_ids = read_data('data/rated_perfume_id.csv') # 21,023 perfumes
-    # n1, n2 = sys.argv[1], sys.argv[2]
-    # print "Scraping first page user ratings..."
-    # count = 0
-    # for pid in perfume_ids[int(n1):int(n2)]: # altogether we have 22,358 perfumes
-    #     scrape_one_page(pid)
-    #     print "Scraped {} first page urls...".format(count)
-    #     count += 1
+    print "Get all perfume id to a list..."
+    # perfume_ids = get_perfume_id()
+    perfume_ids = read_data('data/rated_perfume_id.csv') # 21,023 perfumes
+    n1, n2 = sys.argv[1], sys.argv[2]
+    print "Scraping first page user ratings..."
+    count = 0
+    for pid in perfume_ids[int(n1):int(n2)]: # altogether we have 22,358 perfumes
+        scrape_one_page(pid)
+        print "Scraped {} first page urls...".format(count)
+        count += 1
 
     print "Done inserting first page ratings to MongoDB!"
     print "-"*40

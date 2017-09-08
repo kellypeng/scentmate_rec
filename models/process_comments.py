@@ -4,6 +4,7 @@
 import numpy as np
 import pandas as pd
 import io
+import os
 import jieba
 from collections import defaultdict
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -56,7 +57,9 @@ def combine_comments(short_comments_df, long_comments_df):
 
 
 if __name__ == '__main__':
-    client = MongoClient("mongodb://fragrance:fragrance@35.164.86.3:27017/fragrance")
+    fragrance_un = os.environ.get('FRAGRANCE_UN')
+    fragrance_pw = os.environ.get('FRAGRANCE_PW')
+    client = MongoClient("mongodb://{}:{}@35.164.86.3:27017/fragrance".format(fragrance_un, fragrance_pw))
     db = client.fragrance
     short_ratings = db.short_ratings
     short_ratings = pd.DataFrame(list(short_ratings.find({}, {'_id': 0})))

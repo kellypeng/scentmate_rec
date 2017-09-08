@@ -1,4 +1,5 @@
 import re
+import os
 import sys
 from collections import defaultdict
 from bs4 import BeautifulSoup
@@ -53,20 +54,21 @@ def get_comments(mongo_document):
 
 
 if __name__ == '__main__':
-    mongo_user_name, mongo_pwd = sys.argv[1], sys.argv[2]
-    client = MongoClient("mongodb://{}:{}@35.164.86.3:27017/fragrance".format(mongo_user_name, mongo_pwd))
+    fragrance_un = os.environ.get('FRAGRANCE_UN')
+    fragrance_pw = os.environ.get('FRAGRANCE_PW')
+    client = MongoClient("mongodb://{}:{}@35.164.86.3:27017/fragrance".format(fragrance_un, fragrance_pw))
     fragrance = client.fragrance
     perfume_html = fragrance.perfume_html
     perfume_features = fragrance.perfume_features # get attributes
     perfume_comments = fragrance.perfume_comments # get perfume comments
     raw_data_iterator = perfume_html.find() # retrieve all from mongo
     print "Parsing data and store into MongoDB..."
-    ### Parse perfume attributes
-    # for raw in raw_data_iterator:
-    #     attributes = get_attributes(raw)
-    #     perfume_features.insert_one(attributes) # insert one by one into mongo
-    # print "Done! Everything is parsed into usable format!"
-    # client.close()
+    ## Parse perfume attributes
+    for raw in raw_data_iterator:
+        attributes = get_attributes(raw)
+        perfume_features.insert_one(attributes) # insert one by one into mongo
+    print "Done! Everything is parsed into usable format!"
+    client.close()
 
     ### Parse perfume comments
     count = 0

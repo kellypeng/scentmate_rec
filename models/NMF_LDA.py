@@ -1,5 +1,6 @@
 # Need to run in python 3 environment
 import io
+import os
 import numpy as np
 import pandas as pd
 import jieba
@@ -107,7 +108,9 @@ def get_keywords_mat():
 
 
 if __name__ == '__main__':
-    client = MongoClient("mongodb://fragrance:fragrance@35.164.86.3:27017/fragrance")
+    fragrance_un = os.environ.get('FRAGRANCE_UN')
+    fragrance_pw = os.environ.get('FRAGRANCE_PW')
+    client = MongoClient("mongodb://{}:{}@35.164.86.3:27017/fragrance".format(fragrance_un, fragrance_pw))
     db = client.fragrance
     short_ratings = db.short_ratings
     short_ratings = pd.DataFrame(list(short_ratings.find({}, {'_id': 0})))

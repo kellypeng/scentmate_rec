@@ -1,3 +1,4 @@
+import os
 import sys
 import numpy as np
 import pandas as pd
@@ -102,8 +103,9 @@ class ItemItemRecommender(object):
 
 ####################################################
 def get_ratings_data():
-    mongo_user_name, mongo_pwd = sys.argv[1], sys.argv[2]
-    client = MongoClient("mongodb://{}:{}@35.164.86.3:27017/fragrance".format(mongo_user_name, mongo_pwd))
+    fragrance_un = os.environ.get('FRAGRANCE_UN')
+    fragrance_pw = os.environ.get('FRAGRANCE_PW')
+    client = MongoClient("mongodb://{}:{}@35.164.86.3:27017/fragrance".format(fragrance_un, fragrance_pw))
     db = client.fragrance
     collection = db.ratings_trial2
     utility_matrix = pd.DataFrame(list(collection.find({}, {'_id': 0}))) # not including _id column

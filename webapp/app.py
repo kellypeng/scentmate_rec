@@ -6,7 +6,7 @@ import pandas as pd
 import numpy as np
 import _pickle as pickle
 import cn_en_dict as dt # translation from Chinese to English
-# import graphlab as gl
+import graphlab as gl # python3 does not have graphlab
 from flask import Flask, render_template, request
 from collections import defaultdict
 from pymongo import MongoClient
@@ -64,22 +64,26 @@ def recs(perfume_id=None):
 def login():
 	return render_template('signin.html')
 
-# @app.route('/recommend', methods=['POST','GET'])
-# def recommend(userid=None):
-#     if request.method=='POST':
-#         userid = request.args.get('userid')
-#         model = gl.load_model('../models/pickled_models/mf_model')
-#         recs = model.recommend(users=[str(userid)], k=5)
-#         perfume_id = [str(i) for i in recs['perfume_id']]
-#         rec_perfumes = list(collection.find({'perfume_id': {'$in': perfume_id}},
-#                                             {'item_name':1, 'brand':1, 'gender':1,
-#                                             'note':1, 'tags':1, 'theme':1, '_id':0}))
-#         return render_template('recommend.html', rec_perfumes=rec_perfumes)
+
+matrix factorization recommender, need python 2.7 environment
+@app.route('/recommend', methods=['POST','GET'])
+def recommend(userid=None):
+    if request.method=='POST':
+        userid = request.args.get('userid')
+        model = gl.load_model('../models/pickled_models/mf_model')
+        recs = model.recommend(users=[str(userid)], k=5)
+        perfume_id = [str(i) for i in recs['perfume_id']]
+        rec_perfumes = list(collection.find({'perfume_id': {'$in': perfume_id}},
+                                            {'item_name':1, 'brand':1, 'gender':1,
+                                            'note':1, 'tags':1, 'theme':1, '_id':0}))
+        return render_template('recommend.html', rec_perfumes=rec_perfumes)
+
 
 # Quiz questions landing page
 @app.route('/quiz')
 def quiz():
 	return render_template('quiz.html')
+
 
 # Predict based on user's answers of quiz questions
 @app.route('/getmatch',methods=['POST','GET'])
@@ -127,7 +131,9 @@ if __name__ == "__main__":
     model.fit(perfume_df)
 
     ### Connect to mongo to show recommendations
-    client = MongoClient("mongodb://fragrance:fragrance@35.164.86.3:27017/fragrance")
+    fragrance_un = os.environ.get('FRAGRANCE_UN')
+    fragrance_pw = os.environ.get('FRAGRANCE_PW')
+    client = MongoClient("mongodb://{}:{}@35.164.86.3:27017/fragrance".format(fragrance_un, fragrance_pw))
     db = client.fragrance
     collection = db.perfume_features
     app.run(port=5000, debug=True)

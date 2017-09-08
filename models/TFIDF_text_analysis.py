@@ -1,5 +1,6 @@
 # encoding=utf-8
 import io
+import os
 import numpy as np
 import pandas as pd
 import jieba
@@ -65,7 +66,9 @@ def get_countvec_mat(seg_list, stop_words, max_features=1000):
 
 
 if __name__ == '__main__':
-    client = MongoClient("mongodb://fragrance:fragrance@35.164.86.3:27017/fragrance")
+    fragrance_un = os.environ.get('FRAGRANCE_UN')
+    fragrance_pw = os.environ.get('FRAGRANCE_PW')
+    client = MongoClient("mongodb://{}:{}@35.164.86.3:27017/fragrance".format(fragrance_un, fragrance_pw))
     db = client.fragrance
     collection = db.perfume_comments
     raw_df = pd.DataFrame(list(collection.find({}, {'_id': 0}))) # not including _id column
