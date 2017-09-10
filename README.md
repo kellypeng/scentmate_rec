@@ -1,11 +1,15 @@
 # ScentMate
-###### Capstone Project Final Proposal &bull; g45 &bull; Yuwei(Kelly) Peng &bull; 09/2017
+###### Capstone Project &bull; g45 &bull; Kelly Peng &bull; 09/2017
 
 ---
-#### Check out the final product:
-Web app IP address: 34.212.206.24
+
+![homepage](/img/homepage.png)
+
+**Check out the final product:**
+IP address: 34.212.206.24
 
 ---
+
 
 ## Motivation
 
@@ -15,9 +19,7 @@ Fragrance is not only about scent, it tells your personality, or the impression 
 
 Then I thought, as a data scientist, I should be able to answer the question using my data science knowledge. Help people find their signature perfumes, that is what ScentMate is all about.
 
-ScentMate, find your perfect match.
-
-![homepage](/img/homepage.png)
+**ScentMate, find your perfect match.**
 
 &nbsp;
 ## Recommendation Systems
