@@ -40,7 +40,7 @@ Different architectures for a recommender system:
 For this project, I will implement different approaches, targeting at different consumer groups. For cold start problem (new users and intermediate users without much rating history), I will use content based models, for users with rating history, I will implement item-item similarity collaborative filtering model and matrix factorization model.
 
 ![user_groups](/img/user_groups.png)
-![how_to_use_webapp](/img/how_to_use_webapp.png)
+
 
 
 &nbsp;
