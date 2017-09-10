@@ -2,6 +2,10 @@
 ###### Capstone Project Final Proposal &bull; g45 &bull; Yuwei(Kelly) Peng &bull; 09/2017
 
 ---
+#### Check out the final product:
+Web app IP address: 34.212.206.24
+
+---
 
 ## Motivation
 
