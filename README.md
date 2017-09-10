@@ -31,7 +31,6 @@ Different architectures for a recommender system:
    1. Classification/Regression
    2. Item content similarity (Jaccard similarity, cosine similarity)
    3. Word2Vec
-   4. Non-Negative Matrix Factorization (NMF)
 3. **Collaborative Filtering Recommender** focus on the relationship between users and items. Similarity of items is determined by the similarity of the ratings of those items by the users who have rated both items.
    1. Item-item similarity
    2. User-user similarity
