@@ -9,11 +9,15 @@ Web app IP address: 34.212.206.24
 
 ## Motivation
 
-Fragrance is not only about scent, it tells your personality, or the impression you want to leave on people. People with different personality types will like different scents. In addition to personality, mood, environment, season all affects people's choice of fragrances.
+Fragrance is not only about scent, it tells your personality, or the impression you want to leave on people. People with different personality types will like different scents. So this is what I did a few months ago, when I was looking for my "perfect match":
 
-Among 30,000 fragrance products in the world, do you know which fragrance is your perfect match? What's people's impression of the fragrance you like? Is that the way you want people to think about you? That's what ScentMate is all about.
+![story](/img/story.png)
+
+Then I thought, as a data scientist, I should be able to answer the question using my data science knowledge. Help people find their signature perfumes, that is what ScentMate is all about.
 
 ScentMate, find your perfect match.
+
+![homepage](/img/homepage.png)
 
 &nbsp;
 ## Recommendation Systems
@@ -32,18 +36,22 @@ Different architectures for a recommender system:
    2. User-user similarity
    3. Matrix Factorization
 
-For this project, I will implement different approaches. For cold start problem, I will use content based models, for users with rating history, I will implement item-item similarity collaborative filtering model and matrix factorization model.
+For this project, I will implement different approaches, targeting at different consumer groups. For cold start problem (new users and intermediate users without much rating history), I will use content based models, for users with rating history, I will implement item-item similarity collaborative filtering model and matrix factorization model.
 
-It is also possible to combine the collaborative and content-based approaches into one model and create a hybrid recommendation system.
+![user_groups](/img/user_groups.png)
+![how_to_use_webapp](/img/how_to_use_webapp.png)
+
 
 &nbsp;
 ## Workflow
 
+![workflow](/img/workflow.png)
 **Step 1**. Parallel scrape data from website using 6 AWS EC2 instances
 **Step 2**. Store scraped data in MongoDB on AWS EC2 instance
 **Step 3**. Data analysis, feature engineering, modeling, cross validation
 **Step 4**. Develop a web app using Flask, Bootstrap, HTML, CSS
 **Step 5**. Deploy everything onto AWS EC2 instance, run flask on AWS
+
 
 &nbsp;
 ## Data
