@@ -46,11 +46,7 @@ For this project, I will implement different approaches, targeting at different 
 ## Workflow
 
 ![workflow](/img/workflow.png)
-* **Step 1**. Parallel scrape data from website using 6 AWS EC2 instances
-* **Step 2**. Store scraped data in MongoDB on AWS EC2 instance
-* **Step 3**. Data analysis, feature engineering, modeling, cross validation
-* **Step 4**. Develop a web app using Flask, Bootstrap, HTML, CSS
-* **Step 5**. Deploy everything onto AWS EC2 instance, run flask on AWS
+
 
 
 &nbsp;
