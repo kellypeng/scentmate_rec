@@ -84,6 +84,13 @@ Performance on Test Set|RMSE: 2.20|RMSE: 7.32|RMSE: 1.95|
 Reason||Utility matrix too sparse lead to little information going into each prediction|Should perform better if more data available
 
 &nbsp;
+## How did I do train-test split and cross-validation
+
+Whenever someone says “I built a recommender”, the first question came to my mind is: “How did you validate your recommender’s performance?” Because it is the most challenging part of any recommendation systems. In my project, for content-based recommender, since it is unsupervised and recommended completely based on the perfume features, I validated it by letting my classmates try and see the result. The recommendations in general were good, especially the "Find Similar" function on the home page, but the biggest drawback is that perfume price data is not available, a customer who loves Chanel perfumes will not probably go to a mass market brand even though they have similar ingredients. However for the "Take a Quiz" function on the home page, if a user only selected a few features, the result will be off because the model is building a vector based on all the features a user selected and calculate Jaccard distance between the user vector and every perfume.
+
+For the collaborative filtering recommender, the first cross-validation method I tried was leave-one-out cross validation, but it took me 18 hours to finish one cycle, which is too computationally expensive, thus I switched to manual K-fold validation. First, I manually removed users with less than 3 ratings, treat them as part of cold start problem and let them use the content-based recommender instead. Then, for users with 3 or more ratings, I made sure every user exists in my training set, validation set, and test set. Therefore I can use the user’s rating in the training set to fit the model, predict the rating of the user’s other ratings in the validation set, and tune the model based on RMSE on the validation set. And finally, I used the user’s ratings in the test set to evaluate the final model.
+
+&nbsp;
 ## Limitations
 1. No price data, which has a big impact on content-based recommender's performance
 2. Some fragrance products have no reviews at all, the reason can be they are too old/new/unpopular, these perfumes are not included in dataset
