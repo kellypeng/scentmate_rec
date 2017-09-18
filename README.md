@@ -105,4 +105,51 @@ For the collaborative filtering recommender, the first cross-validation method I
 - Web App: Flask, Bootstrap, HTML, CSS
 
 
+## Tools and Packages used
+
+#### Stack:
+* python
+* git
+* markdown
+
+#### Web Scraping:
+* requests
+* Beautifulsoup
+* urllib2
+* json
+* pickle
+
+#### Data Storage:
+* MongoDB
+* pymongo
+* AWS EC2, S3
+
+#### Feature Engineering:
+* Natural language processing
+* TFIDF
+* NMF (Non-negative Matrix Factorization)
+* LDA (Latent Dirichlet Allocation)
+* regex
+
+#### Modeling/Machine Learning
+* Graphlab
+* Scikit-learn
+* Scipy
+* Numpy
+* Pandas
+* TFIDF, NMF, LDA
+
+#### Data visualization:
+* Matplotlib
+* Seaborn
+* Plotly
+
+#### Web App:
+* Flask
+* Bootstrap
+* HTML
+* CSS
+* JavaScript
+
+
 &nbsp;
