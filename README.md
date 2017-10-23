@@ -96,15 +96,6 @@ For the collaborative filtering recommender, the first cross-validation method I
 2. Some fragrance products have no reviews at all, the reason can be they are too old/new/unpopular, these perfumes are not included in dataset
 
 &nbsp;
-## Tools Used
-- Data processing and EDA: Numpy, Pandas, Matplotlib, Plotly, Seaborn
-- Machine learning and stats: Numpy, Pandas, Graphlab, Scikit-learn, Scipy
-- Web Scaping: BeautifulSoup, urllib2
-- Data Storage: pymongo, MongoDB
-- Cloud Computing: AWS S3, EC2
-- Web App: Flask, Bootstrap, HTML, CSS
-
-
 ## Tools and Packages used
 
 #### Stack:

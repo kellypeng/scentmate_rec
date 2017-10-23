@@ -22,9 +22,10 @@ Different architectures for a recommender system:
    2. Item content similarity (Jaccard similarity, cosine similarity)
    3. Word2Vec
    4. Non-Negative Matrix Factorization (NMF)
-3. **Collaborative Filtering** focus on the relationship between users and items. Similarity of items is determined by the similarity of the ratings of those items by the users who have rated both items.
-4. **Matrix Factorization** is an entirely different approach to estimate the blank entires in the utility matrix. Because the utility matrix is actually the product of two long, thin matrices, we can use this property to decompose utility matrix and use a relatively small set of features of items and users to predict the reaction of most users to most items.
-
+3. **Collaborative Filtering Recommender** focus on the relationship between users and items. Similarity of items is determined by the similarity of the ratings of those items by the users who have rated both items.
+   1. Item-item similarity
+   2. User-user similarity
+   3. Matrix Factorization
 
 For this project, I will implement different approaches. For cold start problem, I will use content based models, for users with rating history, I will implement collaborative filtering and matrix factorization models. For each scenario, select the approach that returns the best prediction.
 
