@@ -12,7 +12,7 @@ from pymongo import MongoClient
 
 
 def short_comments_df(short_ratings_df):
-    '''Takes in short_ratings dataframe, group by perfume id, return a dictionary
+    """Takes in short_ratings dataframe, group by perfume id, return a dictionary
     with perfume id as key, all short comments of that perfume as values
 
     Parameter:
@@ -22,7 +22,7 @@ def short_comments_df(short_ratings_df):
     Return:
     -------
     dataframe, perfume_id as index, perfume short comments as another column
-    '''
+    """
     scomments = defaultdict(list)
     for pid in short_ratings_df['perfume_id'].unique():
         df = short_ratings_df[(short_ratings_df['perfume_id'] == pid)]
@@ -33,7 +33,7 @@ def short_comments_df(short_ratings_df):
     return short_comments_df
 
 def combine_comments(short_comments_df, long_comments_df):
-    '''
+    """
     Join short comments df and long comments df, combine comments of each perfume id
     to a document.
 
@@ -44,7 +44,7 @@ def combine_comments(short_comments_df, long_comments_df):
     Return:
     -------
     joined df, two columns, perfume id and all comments
-    '''
+    """
     long_comments_df.set_index('perfume_id', inplace=True)
     long_comments_df['long_comments'] = long_comments_df['comments'].apply(','.join)
     all_comments = pd.merge(short_comments_df, long_comments_df, how='left', left_index=True, right_index=True)

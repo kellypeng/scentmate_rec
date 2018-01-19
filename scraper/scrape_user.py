@@ -13,9 +13,10 @@ from bs4 import BeautifulSoup
 from collections import defaultdict
 from main import *
 
+
 def get_perfume_id():
-    '''Get url from mongodb, only return number in the url
-    '''
+    """Get url from mongodb, only return number in the url
+    """
     perfume_html = fragrance.perfume_html
     raw_data_iterator = perfume_html.find()
     perfume_ids = []
@@ -30,11 +31,11 @@ def read_data(filename):
     return lines
 
 def scrape_one_page(perfume_id):
-    '''
+    """
     Need to go through each first comment page, scrape the first page user id,
     and return all other page urls.
     Then go through each non-first page url to return the user id on other pages.
-    '''
+    """
     attributes_list = []
     comment_url = "/itmcomment.php?id={}".format(perfume_id)
     response = get_html(comment_url)

@@ -3,6 +3,7 @@ import numpy as np
 from scipy.spatial.distance import cosine
 from sklearn.metrics.pairwise import cosine_similarity
 
+
 class CosineSimilarityRec(object):
 
     def __init__(self, n_rec):
@@ -15,9 +16,9 @@ class CosineSimilarityRec(object):
         self.n_features = perfume_df.values.shape[1]
 
     def predict_one(self, perfume_id):
-        '''
+        """
         Accept perfume id as arg. Return the most similar perfumes of this perfume
-        '''
+        """
         perfume_vec = self.perfume_df.loc[int(perfume_id)].values
         cs = cosine_similarity(perfume_vec, self.perfume_matrix)
         rec_index = np.argsort(cs)[0][::-1]

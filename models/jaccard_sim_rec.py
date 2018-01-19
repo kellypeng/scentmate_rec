@@ -77,10 +77,11 @@ def pickle_idx_dict(perfume_df):
 
 
 if __name__ == '__main__':
-    perfume_df = pd.read_csv('../data/rated_item_matrix.csv')
+    # perfume_df = pd.read_csv('../data/rated_item_matrix.csv')
+    perfume_df = pd.read_csv('../data/item_matrix.csv')
     perfume_df.set_index('perfume_id', inplace=True)
 
     jd = JaccardSimRec(n_rec=5)
     # jd.fit(perfume_df)
-    with open('pickled_models/jaccard_model.pkl', 'wb') as f:
-        pickle.dump(jd, f)
+    # with open('pickled_models/jaccard_model.pkl', 'wb') as f:
+    #     pickle.dump(jd, f)

@@ -12,14 +12,14 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import NMF, LatentDirichletAllocation
 
 def get_corpus(df):
-    '''Build corpus from dataframe'''
+    """Build corpus from dataframe"""
     corpus = []
     for doc in df['all_comments']:
         corpus.append(doc)
     return corpus
 
 def split_to_words(corpus):
-    '''Use jieba to split Chinese text return a list string of words'''
+    """Use jieba to split Chinese text return a list string of words"""
     seg_list = []
     for doc in corpus:
         words = jieba.cut(doc)
@@ -28,15 +28,15 @@ def split_to_words(corpus):
     return seg_list
 
 def get_perfume_stopwords():
-    '''Get stopwords file customized for perfume reviews, return a list of words'''
+    """Get stopwords file customized for perfume reviews, return a list of words"""
     with io.open('perfume_cn_stopwords.txt', 'r', encoding='utf8') as f:
         stpwdlst = f.read().split()
     return stpwdlst
 
 def get_vectorized_mat(seg_list, use_tfidf, stop_words, max_features=1000):
-    '''Get TFIDF or TF matrix from tokenized documents corpus
+    """Get TFIDF or TF matrix from tokenized documents corpus
     If use_tfidf is True --> TFIDF Vectorizer
-    If user_tfidf is False --> Count Vectorizer'''
+    If user_tfidf is False --> Count Vectorizer"""
     Vectorizer = TfidfVectorizer if use_tfidf else CountVectorizer
     vectorizer_model = Vectorizer(stop_words=stop_words,
                            analyzer='word',
@@ -45,18 +45,18 @@ def get_vectorized_mat(seg_list, use_tfidf, stop_words, max_features=1000):
     return vectorizer_model, vec_docs
 
 def display_topics(model, feature_names, no_top_words):
-    '''Display topics generated from NMF and LDA mdoel'''
+    """Display topics generated from NMF and LDA mdoel"""
     for topic_idx, topic in enumerate(model.components_):
         print("Topic %d:" % (topic_idx))
         print(" ".join([feature_names[i]
                         for i in topic.argsort()[:-no_top_words - 1:-1]]))
 
 def hand_label_topics(H, vocabulary):
-    '''
+    """
     Print the most influential words of each latent topic, and prompt the user
     to label each topic. The user should use their humanness to figure out what
     each latent topic is capturing.
-    '''
+    """
     hand_labels = []
     for i, row in enumerate(H):
         top_five = np.argsort(row)[::-1][:20]
@@ -68,7 +68,7 @@ def hand_label_topics(H, vocabulary):
     return hand_labels
 
 def get_keywords_mat():
-    '''
+    """
     Get 12 topics from LDA, add keywords features to rated perfumes.
     Return a dataframe with perfume_id and keywords
 
@@ -79,7 +79,7 @@ def get_keywords_mat():
     Returns:
     ------
     perfume_keywords_df. index: perfume_id, columns: keyword names, values: 1/0
-    '''
+    """
     # manually label 12 topics generatd from LDA
     topic_dict = {0: (u'甜美', u'甜蜜', u'甜味', u'美食', u'香草', u'柔滑'),
                   1: (u'温柔', u'优雅', u'成熟', u'女人', u'脂粉', u'性感'),

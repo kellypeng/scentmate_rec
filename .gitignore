@@ -12,4 +12,5 @@ webapp_test/
 cn_en/
 __pycache__/
 mongo_backup.py
+mongo_update_user.py
 graphlab_item_item_rec.ipynb

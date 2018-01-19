@@ -7,9 +7,8 @@ import numpy as np
 from pymongo import MongoClient
 
 
-
 def prepare_item_mat(perfume_df):
-    '''Takes in MongoDB perfume features table, returns item matrix
+    """Takes in MongoDB perfume features table, returns item matrix
 
     Input:
     ------
@@ -19,7 +18,7 @@ def prepare_item_mat(perfume_df):
     ------
     Item matrix with rows as perfumes, columns as perfume features,
     including notes, tags, gender
-    '''
+    """
     df = perfume_df.drop_duplicates('perfume_id')
     df.set_index(df['perfume_id'], inplace=True)
     note = df['note'].apply(pd.Series) # 653 notes
@@ -39,7 +38,7 @@ def prepare_item_mat(perfume_df):
 
 
 def prepare_util_mat(utility_matrix):
-    '''
+    """
     Input:
     ------
     Takes in ratings data read into pandas dataframe, then
@@ -51,7 +50,7 @@ def prepare_util_mat(utility_matrix):
     Output:
     ------
     - A pandas dataframe with 3 columns: perfume_id, user_id, and user_rating
-    '''
+    """
     utility_matrix = utility_matrix.drop_duplicates()
     utility_matrix.dropna(axis=0, inplace=True) # drop null values, wait, is it appropriate to drop?
     utility_matrix['user_id'] = utility_matrix['rated_user_id'].str.extract('(\d+)').astype(int) # extract user_id number
@@ -60,15 +59,15 @@ def prepare_util_mat(utility_matrix):
 
 
 def remove_user(utility_matrix):
-    '''
+    """
     Takes in utility matrix, removes users with only 1-2 rating record
     Returns new utility matrix
-    '''
+    """
     return utility_matrix[utility_matrix.groupby('user_id')['perfume_id'].transform(len) > 2]
 
 
 def rated_perfumes(perfumes_df, ratings_df):
-    '''
+    """
     Takes in perfume features table, return perfumes that have rating history
 
     Input:
@@ -80,7 +79,7 @@ def rated_perfumes(perfumes_df, ratings_df):
     A dataframe that includes perfumes that have been rated.
     Including brand name, perfume name, perfume id,
     gender, note, perfumer, tags, theme
-    '''
+    """
     perfumes_df = perfumes_df.drop_duplicates('perfume_id')
     perfumes_df.set_index(perfumes_df['perfume_id'], inplace=True)
     # Get all unique perfume ids
@@ -94,7 +93,7 @@ def rated_perfumes(perfumes_df, ratings_df):
 
 
 def rmse(y_true, y_pred):
-    ''' Compute Root-mean-squared-error '''
+    """ Compute Root-mean-squared-error """
     return np.sqrt(np.mean((y_true - y_pred) ** 2))
 
 

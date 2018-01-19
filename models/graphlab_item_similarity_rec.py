@@ -6,8 +6,9 @@ import matplotlib.pyplot as plt
 from time import time
 import model_main as mm
 
+
 def mf_model(data, similarity_type='cosine', only_top_k=64):
-    '''Fit matrix factorization model'''
+    """Fit matrix factorization model"""
     return gl.recommender.item_similarity_recommender.create(data,
                                                             user_id='user_id',
                                                             item_id='perfume_id',
@@ -18,8 +19,8 @@ def mf_model(data, similarity_type='cosine', only_top_k=64):
                                                             only_top_k=only_top_k)
 
 def tune_only_top_k(train, test):
-    '''Find the optimum number of Number of similar items to store for each item
-    and calculate RMSE against train test data'''
+    """Find the optimum number of Number of similar items to store for each item
+    and calculate RMSE against train test data"""
     test_rmse = []
     train_rmse = []
     for n in xrange(30, 200, 5):

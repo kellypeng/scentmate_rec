@@ -4,7 +4,7 @@ import numpy as np
 from pymongo import MongoClient
 
 def train_test_split(df, n=3, frac=0.25):
-    '''Filter out users with >3 ratings.
+    """Filter out users with >3 ratings.
     For users with 3 rating, put 2 ratings in training set, 1 rating in test set.
     For users with more than 3 ratings, divide the total number of ratings by 4,
     leave 1/4 in test set, all others in training set.
@@ -16,7 +16,7 @@ def train_test_split(df, n=3, frac=0.25):
     Returns:
     --------
     Training set, test set. DataFrame.
-    '''
+    """
     training_df = pd.DataFrame()
     test_df = pd.DataFrame()
     df.set_index('perfume_id', inplace=True) # to avoid additional index column

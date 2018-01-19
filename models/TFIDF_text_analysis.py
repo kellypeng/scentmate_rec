@@ -10,14 +10,14 @@ from sklearn.feature_extraction.text import CountVectorizer
 from pymongo import MongoClient
 
 def get_corpus(df):
-    '''Build corpus from dataframe'''
+    """Build corpus from dataframe"""
     corpus = []
     for doc in df['comments']:
         corpus.append(doc[0])
     return corpus
 
 def split_to_words(corpus):
-    '''Use jieba to split Chinese text return a list string of words'''
+    """Use jieba to split Chinese text return a list string of words"""
     seg_list = []
     for doc in corpus:
         words = jieba.cut(doc)
@@ -26,13 +26,13 @@ def split_to_words(corpus):
     return seg_list
 
 def get_perfume_stopwords():
-    '''Get stopwords file customized for perfume reviews, return a list of words'''
+    """Get stopwords file customized for perfume reviews, return a list of words"""
     with io.open('chinese_stopwords.txt', 'r', encoding='utf8') as f:
         stpwdlst = f.read().split()
     return stpwdlst
 
 def get_tfidf_mat(seg_list, stop_words, max_features=1000):
-    '''Get TFIDF matrix from tokenized documents corpus'''
+    """Get TFIDF matrix from tokenized documents corpus"""
     tfidf_vectorizer = TfidfVectorizer(stop_words=stop_words,
                                        analyzer='word',
                                        max_features=max_features)
@@ -40,7 +40,7 @@ def get_tfidf_mat(seg_list, stop_words, max_features=1000):
     return tfidf_vectorizer, tfidf_docs
 
 def find_top_features(k_features, tfidf_mat):
-    '''
+    """
     Find top k features in each perfume from TFIDF matrix
 
     Parameters:
@@ -48,7 +48,7 @@ def find_top_features(k_features, tfidf_mat):
     1. number of features for each perfume
     2. TFIDF matrix converted from sparse matrix to 2d numpy array
 
-    '''
+    """
     top_features_idx = np.empty([tfidf_mat.shape[0], k_features], dtype=int)
     top_features = np.empty([tfidf_mat.shape[0], k_features], dtype=object)
     for i, row in enumerate(tfidf_mat):
@@ -57,7 +57,7 @@ def find_top_features(k_features, tfidf_mat):
     return top_features, top_features_idx
 
 def get_countvec_mat(seg_list, stop_words, max_features=1000):
-    '''Convert a collection of text documents to a matrix of token counts'''
+    """Convert a collection of text documents to a matrix of token counts"""
     countvectorizer=CountVectorizer(stop_words=stop_words,
                                analyzer='word',
                                max_features=max_features)

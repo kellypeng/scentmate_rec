@@ -7,10 +7,10 @@ from pymongo import MongoClient
 
 
 def get_attributes(mongo_document):
-    '''
+    """
     Input: perfume webpage html content
     Output: a dictionary of what I need for the item matrix
-    '''
+    """
     html = mongo_document['html']
     url = mongo_document['url']
     soup = BeautifulSoup(html, 'html.parser')
@@ -36,10 +36,10 @@ def get_attributes(mongo_document):
 
 
 def get_comments(mongo_document):
-    '''
+    """
     Input: perfume webpage html content
     Output: a dictionary of perfume url and perfume comments
-    '''
+    """
     html = mongo_document['html']
     url = mongo_document['url']
     soup = BeautifulSoup(html, 'html.parser')

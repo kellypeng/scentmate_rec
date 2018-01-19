@@ -5,7 +5,7 @@ def gender_dict():
     return {u'男香': 'Male', u'女香': 'Female', u'中性香': 'Unisex'}
 
 def brand_dict():
-    '''Get brand name dictionary, Chinese names as key, English names as value'''
+    """Get brand name dictionary, Chinese names as key, English names as value"""
     reader = csv.reader(open('../cn_en/brand_names.csv', 'r'))
     brand_dict = {}
     for row in reader:
@@ -14,8 +14,8 @@ def brand_dict():
     return brand_dict
 
 def note_dict():
-    '''Takes in two csv files, one contains all CN names, another all EN names.
-    Returns note dictionary, Chinese names as key, English names as value'''
+    """Takes in two csv files, one contains all CN names, another all EN names.
+    Returns note dictionary, Chinese names as key, English names as value"""
     note_cn = pd.read_csv('../cn_en/notes_cn.csv', encoding='utf-8')
     note_en = pd.read_csv('../cn_en/notes_en.csv', encoding='utf-8')
     joined = note_cn.join(note_en, how='inner', lsuffix='_l', rsuffix='_r')
@@ -28,8 +28,8 @@ def note_dict():
     return joined
 
 def tag_dict():
-    '''Takes in two csv files, one contains all CN names, another all EN names.
-    Returns tag dictionary, Chinese names as key, English names as value'''
+    """Takes in two csv files, one contains all CN names, another all EN names.
+    Returns tag dictionary, Chinese names as key, English names as value"""
     note_cn = pd.read_csv('../cn_en/tags_cn.csv', encoding='utf-8')
     note_en = pd.read_csv('../cn_en/tags_en.csv', encoding='utf-8')
     joined = note_cn.join(note_en, how='inner', lsuffix='_l', rsuffix='_r')
@@ -42,9 +42,9 @@ def tag_dict():
     return joined
 
 def theme_dict():
-    '''Takes in csv file with two columns: CN and EN themes.
+    """Takes in csv file with two columns: CN and EN themes.
     Convert into dictionary for visualization
-    '''
+    """
     theme = pd.read_csv('../cn_en/themes.csv', encoding='utf-8')
     theme.set_index('CN', inplace=True)
     theme = theme.to_dict(orient='dict')

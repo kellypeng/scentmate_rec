@@ -40,7 +40,7 @@ def get_html(url):
 
 
 def get_brand_urls():
-    '''
+    """
     Input:
     ------
     List of brand name start letter webpage urls
@@ -49,7 +49,7 @@ def get_brand_urls():
     ------
     Perfume brand name urls in a list
     A dictionary of perfume EN and CN names
-    '''
+    """
     lst = ['/pinpai/2-a.html','/pinpai/3-b.html','/pinpai/4-c.html',
            '/pinpai/5-d.html','/pinpai/6-e.html','/pinpai/7-f.html',
            '/pinpai/8-g.html','/pinpai/9-h.html','/pinpai/10-i.html',
@@ -78,10 +78,10 @@ def get_brand_urls():
 
 
 def scrape_first_page(brand_urls, range_start, range_end):
-    '''
+    """
     Need to go through each brand_url, scrape the first page, then return all other page_urls.
     Then go through each page_url to return the fragrance names on other pages.
-    '''
+    """
     count = 0
     for url in brand_urls[range_start:range_end]:
         response = get_html(url)
@@ -110,12 +110,12 @@ def scrape_first_page(brand_urls, range_start, range_end):
 
 
 def scrape_other_pages(pages_list):
-    '''
+    """
     Go through each page other than the first page, scrape perfume urls
 
     Input: A list of page urls
     Output: Append perfume url to perfumes_2.csv
-    '''
+    """
     count = 0
     for url in pages_list:
         response = get_html(url)
@@ -139,11 +139,11 @@ def scrape_other_pages(pages_list):
 
 
 def scrape_perfume_page(perfume_urls):
-    '''Scrape one page html and store into MongoDB
+    """Scrape one page html and store into MongoDB
 
     Input: list of perfume urls
     Output: url, html, stored into MongoDB ec2 instance
-    '''
+    """
     client = MongoClient("mongodb://{}:{}@35.164.86.3:27017/fragrance".format(fragrance_un, fragrance_pw))
     fragrance = client.fragrance
     perfume_html = fragrance.perfume_html
@@ -161,11 +161,11 @@ def scrape_perfume_page(perfume_urls):
 
 
 def get_url_list(filename):
-    '''Convert a csv file with \r\n delimiter to a list of strings
+    """Convert a csv file with \r\n delimiter to a list of strings
 
     Input: csv file with \r\n delimeter
     Output: a list of urls
-    '''
+    """
     f = open(filename)
     data = []
     for line in f:

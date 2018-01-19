@@ -16,11 +16,11 @@ class ItemItemRecommender(object):
         self.neighborhood_size = neighborhood_size
 
     def fit(self, ratings_contents):
-        '''
+        """
         Implement the model and fit it to the data passed as an argument.
 
         Store objects for describing model fit as class attributes.
-        '''
+        """
         self.ratings_contents = ratings_contents # 3 columns dataframe, user_id, perfume_id, rating
         self.ratings_pivot = pd.pivot_table(self.ratings_contents, values='user_rating', \
                              index='user_id', columns='perfume_id', fill_value=0)
@@ -31,7 +31,7 @@ class ItemItemRecommender(object):
         self._set_neighborhoods()
 
     def _set_neighborhoods(self):
-        '''
+        """
         Get the items most similar to each other item.
 
         Should set a class attribute with a matrix that is has
@@ -40,17 +40,17 @@ class ItemItemRecommender(object):
         will be indexes of other items.
 
         You will call this in your fit method.
-        '''
+        """
         least_to_most_sim_indexes = np.argsort(self.item_sim_mat, 1)
         self.neighborhoods = least_to_most_sim_indexes[:, -self.neighborhood_size:]
 
     def pred_one_user(self, user_id, report_run_time=False):
-        '''
+        """
         Accept user id as arg. Return the predictions for a single user.
 
         Optional argument to specify whether or not timing should be provided
         on this operation.
-        '''
+        """
         start_time = time()
         items_rated_by_this_user = self.ratings_pivot.loc[user_id].nonzero()[0] # use loc to return row index of the user_id, return an 1d array of rated perfume column indices
         # Just initializing so we have somewhere to put rating preds
@@ -68,14 +68,14 @@ class ItemItemRecommender(object):
         return cleaned_out
 
     def pred_all_users(self, data, report_run_time=False):
-        '''
+        """
         Repeated calls of pred_one_user, are combined into a single matrix.
         Return value is matrix of users (rows) items (columns) and predicted
         ratings (values).
 
         Optional argument to specify whether or not timing should be provided
         on this operation.
-        '''
+        """
         start_time = time()
         all_ratings = [
             self.pred_one_user(user_id) for user_id in data['user_id'].unique()]
@@ -84,12 +84,12 @@ class ItemItemRecommender(object):
         return np.array(all_ratings)
 
     def top_n_recs(self, user_id, n):
-        '''
+        """
         Take user_id argument and number argument.
 
         Return that number of items with the highest predicted ratings, after
         removing items that user has already rated.
-        '''
+        """
         pred_ratings = self.pred_one_user(user_id)
         item_index_sorted_by_pred_rating = list(np.argsort(pred_ratings))
         items_rated_by_this_user = self.ratings_pivot.loc[user_id].nonzero()[0]

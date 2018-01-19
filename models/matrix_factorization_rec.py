@@ -2,7 +2,7 @@ import graphlab as gl
 
 
 def mf_model(data, num_factors=8, regularization=0.01, linear_regularization=1e-6):
-    '''Fit matrix factorization model'''
+    """ Fit matrix factorization model """
     return gl.factorization_recommender.create(data,
                                             regularization=regularization,
                                             linear_regularization=linear_regularization,
@@ -13,7 +13,7 @@ def mf_model(data, num_factors=8, regularization=0.01, linear_regularization=1e-
                                             solver='sgd')
 
 def pickle_model(model, fname):
-    ''' Pickles model provided '''
+    """ Pickles model provided """
     model.save(fname)
 
 
