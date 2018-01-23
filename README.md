@@ -63,8 +63,8 @@ The data I scraped from website are two tables. One table is perfume data, which
 Another table is user rating data:
 
 * Number of Ratings: 40k
-* Perfume ID
-* User ID
+* Perfume ID: 3,249 perfumes
+* User ID: 6,478 users
 * Rating Score: Range 2 - 10
 * User Comment
 
